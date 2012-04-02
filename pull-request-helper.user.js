@@ -1,10 +1,12 @@
 // ==UserScript==
+// @match         http://tracker.moodle.org/browse/*
 // @name          Pull Request Helper
 // @description   Makes copy and paste easier for Moodle integrators
 // @author        Dan Poltawski
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
-// @match         http*://tracker.moodle.org/browse/*
+// @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
+// @version       0.4
 // ==/UserScript==
 
 var GITREPO = document.getElementById('customfield_10100-val');
@@ -52,5 +54,4 @@ if (MOODLE_19_STABLE) {
 var integratorDiv = document.createElement('div');
 integratorDiv.innerHTML = s;
 integratorDiv.setAttribute('style', 'border-top: 1px solid #DDD;');
-
 parent.insertBefore(integratorDiv, document.getElementById('tabCellPane1'));

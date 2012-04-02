@@ -1,9 +1,9 @@
 Moodle userscripts
 ==================
 
-Here are some scripts that might be userful to other moodler.
+Here are some scripts that might be userful to other moodlers.
 
-- Pull Request Helper - a copy and paste helper for Moodle integrators [INSTALL](http://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js)
+- Pull Request Helper - a copy and paste helper for Moodle integrators [INSTALL](https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js)
 
 INSTALL
 -------
