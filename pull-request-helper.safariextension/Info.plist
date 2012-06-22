@@ -46,5 +46,7 @@
 			<string>Some</string>
 		</dict>
 	</dict>
+	<key>Update Manifest URL</key>
+	<string>https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.safariextension/update-manifest.plist</string>
 </dict>
 </plist>

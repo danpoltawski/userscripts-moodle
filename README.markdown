@@ -12,6 +12,8 @@ INSTALL
 
 *Firefox* - You will need to install the greasemonkey extension then click the link
 
+*Safari* - Install the extension, from [here](https://dl.dropbox.com/u/5403781/extensions/pull-request-helper.safariextz)
+
 LICENSE
 -------
 This work is released under the terms of the GNU General Public License, v3 or later.
