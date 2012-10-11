@@ -4,6 +4,7 @@ Moodle userscripts
 Here are some scripts that might be userful to other moodlers.
 
 - Pull Request Helper - a copy and paste helper for Moodle integrators. [INSTALL](https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js)
+- MDK Tracker Pull Branches - helper to populate your pull branches on the tracker. [INSTALL](https://github.com/FMCorz/userscripts-moodle/raw/master/mdk-tracker-pull-branches.user.js)
 - MDK Toolbar - add a toolbar of shortcuts on your instances of Moodle. [INSTALL](https://github.com/FMCorz/userscripts-moodle/raw/master/mdk-toolbar.user.js)
 
 INSTALL
