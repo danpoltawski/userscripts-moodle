@@ -10,7 +10,7 @@
 // @match       https://tracker.moodle.org/secure/EditIssue*
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.370
+// @version     0.374
 // ==/UserScript==
 
 // Settings.
@@ -72,6 +72,10 @@ var fields = {
     issue: 'key-val',
     testing: 'customfield_10117',
     comment: 'comment'
+}
+
+var dialogs = {
+    ids: [ 'workflow-transition-951-dialog', 'workflow-transition-5-dialog' ],
 }
 
 var populate_branches = function() {
@@ -236,6 +240,7 @@ function add_buttons() {
     btn.className = 'button';
     btn.value = 'Populate pull branches';
 
+    // Add button at the end of the form.
     var e = document.getElementById('issue-edit-submit');
     if (e) {
         var f = btn.cloneNode(true);
@@ -243,6 +248,7 @@ function add_buttons() {
         e.parentNode.insertBefore(f, e);
     }
 
+    // Add button right before the fields.
     var e = document.getElementById(fields.repository);
     if (e) {
         var f = btn.cloneNode(true);
@@ -260,4 +266,19 @@ function add_buttons() {
 
 }
 
+function set_events() {
+    document.body.addEventListener('DOMNodeInserted', function(e) {
+        if (dialogs.ids.indexOf(e.target.id) > -1) {
+            var callback = function(f) {
+                if (f.target.parentNode != f.currentTarget) {
+                    return;
+                }
+                add_buttons();
+            };
+            e.target.addEventListener('DOMNodeInserted', callback, false);
+        }
+    }, false);
+}
+
 add_buttons();
+set_events();
