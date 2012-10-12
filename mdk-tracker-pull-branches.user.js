@@ -75,10 +75,14 @@ var fields = {
     comment: 'comment'
 }
 
+var dialogs = {
+    ids: [ 'workflow-transition-951-dialog', 'workflow-transition-5-dialog' ],
+}
+
 var populate_branches = function() {
     var display = function() {
         var popup = "" +
-            "<div id='mdk_populate_popup' style='width: 300px; background: #eee; box-shadow: 0px 0px 5px #333; padding: 1px; position: fixed; top: 50%; left: 50%; z-index: 65000; margin-left: -300px; margin-top: -250px;'>" +
+            "<div id='mdk_populate_popup' style='width: 300px; background: #eee; box-shadow: 0px 0px 5px #333; padding: 1px; position: fixed; top: 50%; left: 50%; z-index: 65000; margin-left: -150px; margin-top: -120px;'>" +
             "    <h4 style='margin: .5em; text-align: center;'>Populate pull branches</h4>" +
             "    <div style='margin: .5em;'>" +
             "        <ul style='list-style: none; padding: 0; margin: 0;'>   " +
@@ -253,6 +257,7 @@ function add_buttons() {
     btn.className = 'button';
     btn.value = 'Populate pull branches';
 
+    // Add button at the end of the form.
     var e = document.getElementById('issue-edit-submit');
     if (e) {
         var f = btn.cloneNode(true);
@@ -260,6 +265,7 @@ function add_buttons() {
         e.parentNode.insertBefore(f, e);
     }
 
+    // Add button right before the fields.
     var e = document.getElementById(fields.repository);
     if (e) {
         var f = btn.cloneNode(true);
@@ -286,4 +292,19 @@ function add_buttons() {
 
 }
 
+function set_events() {
+    document.body.addEventListener('DOMNodeInserted', function(e) {
+        if (dialogs.ids.indexOf(e.target.id) > -1) {
+            var callback = function(f) {
+                if (f.target.parentNode != f.currentTarget) {
+                    return;
+                }
+                add_buttons();
+            };
+            e.target.addEventListener('DOMNodeInserted', callback, false);
+        }
+    }, false);
+}
+
 add_buttons();
+set_events();
