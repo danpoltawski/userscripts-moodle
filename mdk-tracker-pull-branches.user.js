@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.380
+// @version     0.390
 // ==/UserScript==
 
 // Settings.
@@ -241,12 +241,12 @@ var go_to_compare = function(node) {
     btn.textContent = 'Go';
     btn.style.fontSize = '.8em';
     btn.style.margin = '0 0 0 0';
+    btn.type = 'button';
     btn.onclick = function() {
         url = node.value;
         if (url.length > 0) {
             window.open(url, '_blank');
         }
-        return false;
     }
     node.parentNode.insertBefore(btn, node.nextSibling);
 }
