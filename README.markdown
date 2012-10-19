@@ -7,6 +7,7 @@ Here are some scripts that might be userful to other moodlers.
 - MDK Tracker Pull Branches - helper to populate your pull branches on the tracker. [INSTALL](https://github.com/FMCorz/userscripts-moodle/raw/master/mdk-tracker-pull-branches.user.js)
 - MDK Tracker Tester - mark the testing instructions as you follow them, use a template when writing them. [INSTALL](https://github.com/FMCorz/userscripts-moodle/raw/master/mdk-tracker-tester.user.js)
 - MDK Toolbar - add a toolbar of shortcuts on your instances of Moodle. [INSTALL](https://github.com/FMCorz/userscripts-moodle/raw/master/mdk-toolbar.user.js)
+- Tracker Toogle Moodle Menu - show/hide the Moodle.org menu on the tracker. [INSTALL](https://github.com/FMCorz/userscripts-moodle/raw/master/tracker-toggle-moodle-menu.user.js)
 
 INSTALL
 -------
