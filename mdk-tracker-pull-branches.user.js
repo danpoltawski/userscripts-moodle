@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.390
+// @version     0.391
 // ==/UserScript==
 
 // Settings.
@@ -76,7 +76,7 @@ var fields = {
 }
 
 var dialogs = {
-    ids: [ 'workflow-transition-951-dialog', 'workflow-transition-5-dialog' ],
+    ids: [ 'workflow-transition-951-dialog', 'workflow-transition-5-dialog', 'workflow-transition-821-dialog'],
 }
 
 var populate_branches = function() {
