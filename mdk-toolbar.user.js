@@ -6,7 +6,7 @@
 // @match           http://localhost/*
 // @match           http://*.moodle.local/*
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.344
+// @version         0.357
 // ==/UserScript==
 
 // Configuration
@@ -18,7 +18,29 @@ var settings = {
     student_password: 'test',
     teacher_prefix: 't',
     teacher_count: 3,
-    teacher_password: 'test'
+    teacher_password: 'test',
+    themes: [
+        'afterburner',
+        'anomaly',
+        'arialist',
+        'binarius',
+        'boxxie',
+        'brick',
+        'canvas',
+        'formal_white',
+        'formfactor',
+        'fusion',
+        'leatherbound',
+        'magazine',
+        'mymobile',
+        'nimble',
+        'nonzero',
+        'overlay',
+        'serenity',
+        'sky_high',
+        'splash',
+        'standard'
+    ]
 };
 
 // Script
@@ -162,18 +184,18 @@ if (!!M) {
 
         // Menu
         e = D.createElement('div');
-        e.style.zIndex = '3500';
+        e.style.zIndex = '65001';
         e.style.position = 'fixed';
         e.style.borderBottom = '1px solid #000';
         e.style.top = '0px';
         e.style.left = '0px';
-        e.style.height = '17px';
+        e.style.height = '24px';
         e.style.width = '100%';
         e.style.background = '#ccc';
         e.style.padding = '1px 4px';
         e.style.color = '#333';
         // Margin the body because menu is fixed
-        D.body.style.marginTop = '17px';
+        D.body.style.marginTop = '24px';
 
         // Loading pic
         loading_pic = D.createElement('img');
@@ -254,6 +276,33 @@ if (!!M) {
         p.textContent = 'Breadcrumb';
         p.onclick = function () { mdkBreadCrumb(); return false; };
         e.appendChild(p);
+
+        // Separator
+        e.appendChild(D.createTextNode(' | '));
+
+        // Switch themes
+        var select = D.createElement('select');
+        var option = D.createElement('option');
+        option.value = '';
+        option.text = 'Themes';
+        select.appendChild(option);
+        for (var i = 0; i < settings.themes.length; i++) {
+            option = D.createElement('option');
+            option.value = settings.themes[i];
+            option.text = settings.themes[i];
+            select.appendChild(option);
+        };
+        select.onchange = function() {
+            if (!this.value) {
+                return;
+            }
+            var loc = document.location;
+            var url = loc.href.replace(/&?theme=[a-z0-9]+/, '');
+            url += loc.search != '' ? '&' : '?';
+            url += 'theme=' + this.value;
+            document.location.href = url;
+        };
+        e.appendChild(select);
 
         // Add toolbar menu
         B.insertBefore(e, B.firstChild);
