@@ -9,8 +9,9 @@
 // @match           http://*.moodle.local/*
 // @match           https://localhost/*
 // @match           https://*.moodle.local/*
+// @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.358
+// @version         0.359
 // ==/UserScript==
 
 // Configuration
