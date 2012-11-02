@@ -3,10 +3,14 @@
 // @description     Set a toolbar of shortcuts on your instances of Moodle
 // @include         http://localhost/*
 // @include         http://*.moodle.local/*
+// @include         https://localhost/*
+// @include         https://*.moodle.local/*
 // @match           http://localhost/*
 // @match           http://*.moodle.local/*
+// @match           https://localhost/*
+// @match           https://*.moodle.local/*
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.357
+// @version         0.358
 // ==/UserScript==
 
 // Configuration
