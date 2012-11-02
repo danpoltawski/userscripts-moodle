@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.391
+// @version     0.392
 // ==/UserScript==
 
 // Settings.
@@ -256,14 +256,6 @@ function add_buttons() {
     btn.type = 'button';
     btn.className = 'button';
     btn.value = 'Populate pull branches';
-
-    // Add button at the end of the form.
-    var e = document.getElementById('issue-edit-submit');
-    if (e) {
-        var f = btn.cloneNode(true);
-        f.onclick = populate_branches;
-        e.parentNode.insertBefore(f, e);
-    }
 
     // Add button right before the fields.
     var e = document.getElementById(fields.repository);
