@@ -11,7 +11,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.360
+// @version         0.362
 // ==/UserScript==
 
 // Configuration
@@ -117,7 +117,7 @@ if (!!M) {
             window.location.reload();
         }
     };
-    var mdkDoLogin = function(mode) {
+    var mdkDoLoginIframe = function(mode) {
         loginFrame = D.getElementById('mdkLoginiFrame')
         if (!loginFrame) {
             return;
@@ -128,6 +128,9 @@ if (!!M) {
             loginFrameD = loginFrame.contentDocument;
         }
         loginFrame.onload = function() { mdkAfterDoLogin(false); }
+        mdkDoLogin(loginFrameD, mode);
+    };
+    var mdkDoLogin = function(doc, mode) {
         var login = '';
         var password = '';
         if (mode == 'student') {
@@ -140,10 +143,10 @@ if (!!M) {
             login = settings.admin_login;
             password = settings.admin_password;
         }
-        loginFrameD.getElementById('username').value = login;
-        loginFrameD.getElementById('password').value = password;
-        loginFrameD.getElementById('login').submit();
-    };
+        doc.getElementById('username').value = login;
+        doc.getElementById('password').value = password;
+        doc.getElementById('login').submit();
+    }
     var mdkLogin = function(mode) {
         if (typeof(mode) === 'undefined') { mode = 'admin' };
         mdkShowLoading(true);
@@ -152,7 +155,7 @@ if (!!M) {
             var el = document.createElement('iframe');
             el.id = 'mdkLoginiFrame';
             el.src = M.cfg.wwwroot + '/login/index.php';
-            el.onload = function() { mdkDoLogin(mode); };
+            el.onload = function() { mdkDoLoginIframe(mode); };
             el.style.cssText = 'display: none;';
             document.body.appendChild(el);
         }
@@ -166,8 +169,10 @@ if (!!M) {
             el.onload = function() { loginMethod(mode); };
             el.style.cssText = 'display: none;';
             document.body.appendChild(el);
+        } else if (document.location.pathname.search(/\/login\/index\.php/) >= 0) {
+            mdkDoLogin(document, mode);
         } else {
-            loginMethod();
+            loginMethod(mode);
         }
 
         return false;
