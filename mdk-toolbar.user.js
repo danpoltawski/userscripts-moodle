@@ -11,7 +11,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.359
+// @version         0.360
 // ==/UserScript==
 
 // Configuration
@@ -186,31 +186,54 @@ if (!!M) {
     }
 
     function displayMenu() {
+        var p, e, x;
 
         // Menu
         e = D.createElement('div');
+        e.id = 'mdkToolbar'
         e.style.zIndex = '65001';
         e.style.position = 'fixed';
         e.style.borderBottom = '1px solid #000';
         e.style.top = '0px';
         e.style.left = '0px';
         e.style.height = '24px';
+        e.style.lineHeight = '24px';
         e.style.width = '100%';
         e.style.background = '#ccc';
-        e.style.padding = '1px 4px';
+        e.style.padding = '1px 10px 1px 4px';
         e.style.color = '#333';
-        // Margin the body because menu is fixed
+        // Margin the body because menu is fixed.
         D.body.style.marginTop = '24px';
 
+        // Close button.
+        x = D.createElement('a');
+        x.href = '#';
+        x.textContent = 'X';
+        x.onclick = function() {
+            document.body.removeChild(document.getElementById('mdkToolbar'));
+            D.body.style.marginTop = '0';
+            return false;
+        }
+        p = D.createElement('div');
+        p.style.cssFloat = 'right';
+        p.style.marginRight = '8px';
+        p.appendChild(D.createTextNode('['));
+        p.appendChild(x);
+        p.appendChild(D.createTextNode(']'));
+        e.appendChild(p);
+
         // Loading pic
+        p = D.createElement('div');
+        p.style.visibility = 'hidden';
+        p.style.marginRight = '4px';
+        p.style.lineHeight = '24px';
+        p.style.cssFloat = 'right';
+        p.id = 'mdkLoadingPic';
         loading_pic = D.createElement('img');
         loading_pic.src = M.cfg.loadingicon;
-        loading_pic.id = 'mdkLoadingPic';
         loading_pic.style.verticalAlign = 'text-bottom';
-        loading_pic.style.visibility = 'hidden';
-        loading_pic.style.cssFloat = 'right';
-        loading_pic.style.marginRight = '5px';
-        e.appendChild(loading_pic);
+        p.appendChild(loading_pic);
+        e.appendChild(p);
 
         // Purge cache
         p = D.createElement('a');
