@@ -11,7 +11,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.363
+// @version         0.370
 // ==/UserScript==
 
 // Configuration
@@ -24,6 +24,12 @@ var settings = {
     teacher_prefix: 't',
     teacher_count: 3,
     teacher_password: 'test',
+    langs: [
+        'en',
+        'fr',
+        'he*',
+        'ja'
+    ],
     themes: [
         'afterburner',
         'anomaly',
@@ -312,6 +318,33 @@ if (!!M) {
         p.textContent = 'Breadcrumb';
         p.onclick = function () { mdkBreadCrumb(); return false; };
         e.appendChild(p);
+
+        // Separator
+        e.appendChild(D.createTextNode(' | '));
+
+        // Switch language.
+        var select = D.createElement('select');
+        var option = D.createElement('option');
+        option.value = '';
+        option.text = 'Lang';
+        select.appendChild(option);
+        for (var i = 0; i < settings.langs.length; i++) {
+            option = D.createElement('option');
+            option.value = settings.langs[i].replace('*', '');
+            option.text = settings.langs[i];
+            select.appendChild(option);
+        };
+        select.onchange = function() {
+            if (!this.value) {
+                return;
+            }
+            var loc = D.location;
+            var url = loc.href.replace(/&?lang=[a-z]+/, '');
+            url += loc.search != '' ? '&' : '?';
+            url += 'lang=' + this.value;
+            D.location.href = url;
+        };
+        e.appendChild(select);
 
         // Separator
         e.appendChild(D.createTextNode(' | '));
