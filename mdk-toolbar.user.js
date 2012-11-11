@@ -202,8 +202,13 @@ if (!!M) {
         e.style.background = '#ccc';
         e.style.padding = '1px 10px 1px 4px';
         e.style.color = '#333';
-        // Margin the body because menu is fixed.
+
+        // Style tweaks.
         D.body.style.marginTop = '24px';
+        p = D.createElement('style');
+        p.type = 'text/css';
+        p.textContent = '#dock { top: 24px; }';
+        D.body.appendChild(p);
 
         // Close button.
         x = D.createElement('a');
