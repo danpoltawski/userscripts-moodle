@@ -11,7 +11,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.370
+// @version         0.375
 // ==/UserScript==
 
 // Configuration
@@ -332,6 +332,7 @@ if (!!M) {
             option = D.createElement('option');
             option.value = settings.langs[i].replace('*', '');
             option.text = settings.langs[i];
+            option.selected = (document.getElementsByTagName('html')[0].lang == option.value) ? 'selected' : '';
             select.appendChild(option);
         };
         select.onchange = function() {
@@ -349,7 +350,7 @@ if (!!M) {
         // Separator
         e.appendChild(D.createTextNode(' | '));
 
-        // Switch themes
+        // Switch themes.
         var select = D.createElement('select');
         var option = D.createElement('option');
         option.value = '';
@@ -359,6 +360,7 @@ if (!!M) {
             option = D.createElement('option');
             option.value = settings.themes[i];
             option.text = settings.themes[i];
+            option.selected = (M.cfg.theme == option.value) ? 'selected' : '';
             select.appendChild(option);
         };
         select.onchange = function() {
