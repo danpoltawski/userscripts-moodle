@@ -1,12 +1,13 @@
 // ==UserScript==
 // @match         http://tracker.moodle.org/browse/*
+// @match         https://tracker.moodle.org/browse/*
 // @name          Pull Request Helper
 // @description   Makes copy and paste easier for Moodle integrators
 // @author        Dan Poltawski
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
-// @version       0.4
+// @version       0.5
 // ==/UserScript==
 
 var GITREPO = document.getElementById('customfield_10100-val');
