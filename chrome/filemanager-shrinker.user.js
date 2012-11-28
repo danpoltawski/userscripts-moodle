@@ -1,0 +1,1 @@
+../filemanger-shrinker.user.js

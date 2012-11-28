@@ -1,0 +1,26 @@
+{
+  "name": "MDK Browser Extension",
+  "version": "0.4",
+  "manifest_version": 2,
+  "description": "A collection of userscripts to make Moodle developers' life easier.",
+  "icons": {
+    "16": "moodle.gif",
+    "48": "moodle.gif",
+    "128": "moodle.gif"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "moodle.gif",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ]
+}
