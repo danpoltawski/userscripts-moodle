@@ -4,9 +4,9 @@
   "manifest_version": 2,
   "description": "A collection of userscripts to make Moodle developers' life easier.",
   "icons": {
-    "16": "moodle.gif",
-    "48": "moodle.gif",
-    "128": "moodle.gif"
+    "16": "mdk-16.png",
+    "48": "mdk-48.png",
+    "128": "mdk-128.png"
   },
   "background": {
     "scripts": [
@@ -14,7 +14,7 @@
     ]
   },
   "browser_action": {
-    "default_icon": "moodle.gif",
+    "default_icon": "mdk-16.png",
     "default_popup": "popup.html"
   },
   "options_page": "options.html",
