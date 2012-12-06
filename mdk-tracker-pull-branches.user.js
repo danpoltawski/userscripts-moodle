@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.40
+// @version     0.41
 // ==/UserScript==
 
 // Settings.
@@ -132,7 +132,7 @@ var mdkTrackerPullBranches = {
                 "    <div style='margin: .5em;'>" +
                 "        <ul style='list-style: none; padding: 0; margin: 0;'>   " +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='19' id='mdk_version_19' class='mdk_version'> 1.9</label></li>" +
-                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='21' id='mdk_version_21' class='mdk_version'> 2.1</label></li>" +
+                // "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='21' id='mdk_version_21' class='mdk_version'> 2.1</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='22' id='mdk_version_22' class='mdk_version'> 2.2</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='23' id='mdk_version_23' class='mdk_version'> 2.3</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='24' id='mdk_version_24' class='mdk_version'> 2.4</label></li>" +
