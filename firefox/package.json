@@ -1,0 +1,168 @@
+{
+    "name": "mdk-browser-extension",
+    "license": "GPL",
+    "author": "Frédéric Massart <fred@moodle.com> (http://fmcorz.net)",
+    "homepage": "https://github.com/danpoltawski/userscripts-moodle",
+    "version": "0.1",
+    "fullName": "MDK Browser Extension",
+    "id": "jid1-yzSozbwZo3wKIg",
+    "description": "A collection of userscripts to make Moodle developers' life easier.",
+    "icon": "data/mdk-48.png",
+    "icon64": "data/mdk-64.png",
+    "preferences": [
+        {
+            "name": "mdk_hosts",
+            "title": "Limit to hosts",
+            "description": "Hosts to limit the userscripts to (each separated by a pipe). This does not apply to scripts which run on specific domains (tracker.moodle.org, moodle.org, ...).",
+            "type": "string",
+            "value": "localhost|127.0.0.1|*.moodle.local"
+        },
+        {
+            "name": "mdk_filemanager_shrinker_enabled",
+            "title": "File Manager Shrinker",
+            "description": "Enable File Manager Shrinker",
+            "type": "bool",
+            "value": false
+        },
+        {
+            "name": "mdk_pull_request_helper_enabled",
+            "title": "Pull Request Helper",
+            "description": "Enable Pull Request Helper",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name": "mdk_toolbar_enabled",
+            "title": "Toolbar",
+            "description": "Enable Toolbar",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name": "mdk_toolbar_admin_login",
+            "title": "Toolbar admin login",
+            "description": "The administrator login",
+            "type": "string",
+            "value": "admin"
+        },
+        {
+            "name": "mdk_toolbar_admin_password",
+            "title": "Toolbar admin password",
+            "description": "The administrator password",
+            "type": "string",
+            "value": "test"
+        },
+        {
+            "name": "mdk_toolbar_teacher_prefix",
+            "title": "Toolbar teacher prefix",
+            "description": "The prefix used for your teacher accounts",
+            "type": "string",
+            "value": "t"
+        },
+        {
+            "name": "mdk_toolbar_teacher_password",
+            "title": "Toolbar teacher password",
+            "description": "The password of your teacher accounts",
+            "type": "string",
+            "value": "test"
+        },
+        {
+            "name": "mdk_toolbar_teacher_count",
+            "title": "Toolbar teacher count",
+            "description": "The number of teachers to randomly pick from",
+            "type": "integer",
+            "value": 3
+        },
+        {
+            "name": "mdk_toolbar_student_prefix",
+            "title": "Toolbar student prefix",
+            "description": "The prefix used for your student accounts",
+            "type": "string",
+            "value": "s"
+        },
+        {
+            "name": "mdk_toolbar_student_password",
+            "title": "Toolbar student password",
+            "description": "The password of your student accounts",
+            "type": "string",
+            "value": "test"
+        },
+        {
+            "name": "mdk_toolbar_student_count",
+            "title": "",
+            "description": "The number of students to randomly pick from",
+            "type": "integer",
+            "value": 10
+        },
+        {
+            "name": "mdk_tracker_pull_branches_enabled",
+            "title": "Tracker Pull Branches",
+            "description": "Enable Tracker Pull Branches",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name": "mdk_tracker_pull_branches_repository",
+            "title": "Tracker Pull Branches repository",
+            "description": "Public git URL to your Moodle repository",
+            "type": "string",
+            "value": "git://github.com/YourUserName/moodle.git"
+        },
+        {
+            "name": "mdk_tracker_pull_branches_branch",
+            "title": "Tracker Pull Branches branch naming",
+            "description": "How do you name your branch? Use %issue%, %version% and %suffix% as placeholders.",
+            "type": "string",
+            "value": "MDL-%issue%%version%%suffix%"
+        },
+        {
+            "name": "mdk_tracker_pull_branches_compare_url",
+            "title": "Tracker Pull Branches compare URL",
+            "description": "The URL to view the diff of your branche. Use %branch% and %with% as placeholders.",
+            "type": "string",
+            "value": "https://github.com/YourUserName/moodle/compare/%with%...%branch%"
+        },
+        {
+            "name": "mdk_tracker_pull_branches_default_branches",
+            "title": "Tracker Pull Branches default branches",
+            "description": "Comma separated list of the default branches to select (22, 23, master).",
+            "type": "string",
+            "value": "23, 24, master"
+        },
+        {
+            "name": "mdk_tracker_pull_branches_compare_with_origin",
+            "title": "Tracker Pull Branches compare with origin",
+            "description": "If you are using github you won't have to push stable branches any more.",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name": "mdk_tracker_pull_branches_versions",
+            "title": "Tracker Pull Branches version naming",
+            "description": "How do you name your version? List separated by pipes. (22:-22|23:-23|24:-master)",
+            "type": "string",
+            "value": "19:-19|21:-21|22:-22|23:-23|24:-24|master:-master"
+        },
+        {
+            "name": "mdk_tracker_pull_branches_suffix",
+            "title": "Tracker Pull Branches suffix",
+            "description": "How to separate the suffix from the rest of the branch. Separate what has to be before the suffix from what has to be after with a pipe.",
+            "type": "string",
+            "value": "-|"
+        },
+        {
+            "name": "mdk_tracker_tester_helper_enabled",
+            "title": "Tracker Tester Helper",
+            "description": "Enable Tracker Tester Helper",
+            "type": "bool",
+            "value": true
+        },
+        {
+            "name": "mdk_tracker_toggle_moodle_menu_enabled",
+            "title": "Tracker Toggle Moodle.org Menu",
+            "description": "Enable Tracker Toggle Moodle.org Menu",
+            "type": "bool",
+            "value": true
+        }
+    ]
+}
