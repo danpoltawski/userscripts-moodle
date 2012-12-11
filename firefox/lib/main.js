@@ -195,5 +195,3 @@ tabs.on('ready', function (tab) {
 
     }
 });
-
-tabs.open('https://tracker.moodle.org/browse/MDL-36565');
