@@ -11,77 +11,63 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.41
+// @version     0.42
 // ==/UserScript==
 
-// Settings.
-var settings = {
-    // Branch default template.
-    branch: 'MDL-%issue%%version%%suffix%',
-
-    // Git:// URL to your repository.
-    repository: 'git://github.com/FMCorz/moodle.git',
-
-    // Compare URL template.
-    compare_url: 'https://github.com/FMCorz/moodle/compare/%with%...%branch%',
-
-    // If you are using github you can set this to true to compare with the origin.
-    compare_with_origin: true,
-
-    // The default branches to select.
-    default_branches: [ '22', '23', '24', 'master' ],
-
-    // How do you name your versions in the branches?
-    versions: {
-        19: '-19',
-        20: '-20',
-        21: '-21',
-        22: '-22',
-        23: '-23',
-        24: '-24',
-        master: '-master'
-    },
-
-    // How to separate the suffix with the rest of the context, if any.
-    suffix: {
-        after: '',
-        before: '-'
-    },
-
-    // Preview all your selection instead of just one branch.
-    real_preview: true
-};
-
-var mdkTrackerPullBranchesSettings = mdkTrackerPullBranchesSettings || {};
-
-var SM = (function (defaults, overwrite) {
-
-    var my = {};
-    my.defaults = defaults;
-    my.storage = {};
-    my.get = function (key) {
-        var val = this.storage[key];
-        if (val === undefined) {
-            val = this.defaults[key];
-        }
-        return val;
-    };
-    my.set = function (key, val) {
-        this.storage[key] = val;
-    };
-
-    // Overwrite the settings passed.
-    if (overwrite) {
-        for (var key in overwrite) {
-            my.set(key, overwrite[key]);
-        }
-    }
-
-    return my;
-
-}(settings, mdkTrackerPullBranchesSettings));
-
 var mdkTrackerPullBranches = {
+
+    // Settings.
+    settings: {
+        // Branch default template.
+        branch: 'MDL-%issue%%version%%suffix%',
+
+        // Git:// URL to your repository.
+        repository: 'git://github.com/FMCorz/moodle.git',
+
+        // Compare URL template.
+        compare_url: 'https://github.com/FMCorz/moodle/compare/%with%...%branch%',
+
+        // If you are using github you can set this to true to compare with the origin.
+        compare_with_origin: true,
+
+        // The default branches to select.
+        default_branches: [ '22', '23', '24', 'master' ],
+
+        // How do you name your versions in the branches?
+        versions: {
+            19: '-19',
+            20: '-20',
+            21: '-21',
+            22: '-22',
+            23: '-23',
+            24: '-24',
+            master: '-master'
+        },
+
+        // How to separate the suffix with the rest of the context, if any.
+        suffix: [
+            // Before.
+            '-',
+            // After.
+            ''
+        ],
+
+        // Preview all your selection instead of just one branch.
+        real_preview: true,
+
+        // Settings functions.
+        get: function(name) {
+            return this[name];
+        },
+        load: function(settings) {
+            for (var key in settings) {
+                this.set(key, settings[key]);
+            }
+        },
+        set: function(name, setting) {
+            this[name] = setting;
+        }
+    },
 
     fields: {
         repository: 'customfield_10100',
@@ -116,10 +102,7 @@ var mdkTrackerPullBranches = {
         ]
     },
 
-    settings: null,
-
     init: function(settings) {
-        this.settings = settings;
         this.add_buttons();
         this.set_events();
     },
@@ -160,12 +143,12 @@ var mdkTrackerPullBranches = {
         };
 
         var get_branch_name = function(issue, version, suffix) {
-            var branch = settings.branch;
+            var branch = scope.settings.branch;
             branch = branch.replace('%issue%', issue);
-            version = settings.versions[version];
+            version = scope.settings.versions[version] || '';
             branch = branch.replace('%version%', version);
             if (suffix && suffix.length > 0) {
-                suffix = scope.settings.get('suffix').before + suffix + scope.settings.get('suffix').after;
+                suffix = (scope.settings.get('suffix')[0] || '') + suffix + (scope.settings.get('suffix')[1] || '');
             } else {
                 suffix = '';
             }
@@ -346,4 +329,13 @@ var mdkTrackerPullBranches = {
 
 };
 
-mdkTrackerPullBranches.init(SM);
+if (self && self.port && self.port.on) {
+    // Firefox extension specific.
+    self.port.on("loadConfig", function(options) {
+        mdkTrackerPullBranches.settings.load(options);
+        mdkTrackerPullBranches.init();
+    });
+} else {
+    // Greasemonkey fallback.
+    mdkTrackerPullBranches.init();
+}

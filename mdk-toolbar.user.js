@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.400
+// @version         0.410
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -60,6 +60,7 @@ var mdkToolbar = {
         ],
         opacity: '.8',
 
+        // Settings functions.
         get: function(name) {
             return this[name];
         },
@@ -78,22 +79,24 @@ var mdkToolbar = {
     loginid: 'mdkLoginiFrame',
     M: null,
     purgeid: 'mdkPurgeCacheiFrame',
-    unsafeWindow: null,
 
     init: function(window) {
+        // Try to get the M variable.
+        this.M = window.M || undefined;
+    },
+
+    display: function() {
         // Toolbar already there.
         if (document.getElementById(this.id)) {
             return;
         }
 
-        // Limit to Moodle sites.
-        this.M = window.M || undefined;
+        // Make sure M was found, which more or less guarantee that we are
+        // on a Moodle site.
         if (!this.M) {
             return;
         }
-    },
 
-    display: function() {
         var p, e, x;
         var D = document;
         var B = document.body;
@@ -240,6 +243,9 @@ var mdkToolbar = {
             }
             var loc = D.location;
             var search = loc.search.replace(/&?lang=[a-z]+/, '');
+            if (!loc.origin) {
+                loc.origin = loc.protocol + '//' + loc.hostname;
+            }
             var url = loc.origin + loc.pathname + search;
             url += search !== '' ? '&' : '?';
             url += 'lang=' + this.value;
@@ -270,6 +276,9 @@ var mdkToolbar = {
             }
             var loc = document.location;
             var search = loc.search.replace(/&?theme=[a-z0-9]+/, '');
+            if (!loc.origin) {
+                loc.origin = loc.protocol + '//' + loc.hostname;
+            }
             var url = loc.origin + loc.pathname + search;
             url += search !== '' ? '&' : '?';
             url += 'theme=' + this.value;
@@ -360,13 +369,15 @@ var mdkToolbar = {
                 return;
             }
             document.body.removeChild(frame);
-            scope.loading(false);
             if (!noreload) {
                 window.location.reload();
+            } else {
+                scope.loading(false);
             }
         };
 
-        logininfo = document.getElementsByClassName('logininfo')[0].children;
+        scope.loading(true);
+        var logininfo = document.getElementsByClassName('logininfo')[0].children;
         // If there are two children, means two links, we are probably logged in.
         if (logininfo.length >= 2) {
             var el = document.createElement('iframe');
@@ -423,14 +434,16 @@ if (!!window.opera) {
     unsafeWindow = div.onclick();
 }
 
+// TODO Do not init and destroy mdkToolbar when not on Moodle site.
 mdkToolbar.init(unsafeWindow);
 
-// Firefox extension specific.
 if (self && self.port && self.port.on) {
+    // Firefox extension specific.
     self.port.on("loadConfig", function(options) {
         mdkToolbar.settings.load(options);
         mdkToolbar.display();
     });
 } else {
+    // Greasemonkey fallback.
     mdkToolbar.display();
 }
