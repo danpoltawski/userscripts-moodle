@@ -1,0 +1,1 @@
+../../moodleorg-markdown-selector.user.js

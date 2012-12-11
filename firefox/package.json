@@ -25,6 +25,13 @@
             "value": false
         },
         {
+            "name": "moodleorg_markdown_selector_enabled",
+            "title": "Moodle.org Markdown Selector",
+            "description": "Enable Moodle.org Markdown Selector",
+            "type": "bool",
+            "value": false
+        },
+        {
             "name": "mdk_pull_request_helper_enabled",
             "title": "Pull Request Helper",
             "description": "Enable Pull Request Helper",
@@ -123,7 +130,7 @@
             "value": "https://github.com/YourUserName/moodle/compare/%with%...%branch%"
         },
         {
-            "name": "mdk_tracker_pull_branches_default_branches",
+            "name": "mdk_tracker_pull_branches_default_branches-listComma",
             "title": "Tracker Pull Branches default branches",
             "description": "Comma separated list of the default branches to select (22, 23, master).",
             "type": "string",
@@ -137,14 +144,14 @@
             "value": true
         },
         {
-            "name": "mdk_tracker_pull_branches_versions",
+            "name": "mdk_tracker_pull_branches_versions-dictPipeColon",
             "title": "Tracker Pull Branches version naming",
-            "description": "How do you name your version? List separated by pipes. (22:-22|23:-23|24:-master)",
+            "description": "How do you name your version? List separated by pipes and colons. (22:-22|23:-23|24:-master)",
             "type": "string",
             "value": "19:-19|21:-21|22:-22|23:-23|24:-24|master:-master"
         },
         {
-            "name": "mdk_tracker_pull_branches_suffix",
+            "name": "mdk_tracker_pull_branches_suffix-listPipe",
             "title": "Tracker Pull Branches suffix",
             "description": "How to separate the suffix from the rest of the branch. Separate what has to be before the suffix from what has to be after with a pipe.",
             "type": "string",
