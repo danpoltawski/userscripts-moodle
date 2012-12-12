@@ -442,6 +442,12 @@ if (self && self.port && self.port.on) {
         mdkToolbar.settings.load(options);
         mdkToolbar.display();
     });
+} else if (chrome && chrome.extension && chrome.extension.sendMessage) {
+    // Chrome extension specific.
+    chrome.extension.sendMessage({ action: 'getConfig', module: 'mdk_toolbar'}, function(response) {
+        mdkToolbar.settings.load(response);
+        mdkToolbar.display();
+    });
 } else {
     // Greasemonkey fallback.
     mdkToolbar.display();
