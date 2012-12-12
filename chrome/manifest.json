@@ -1,6 +1,6 @@
 {
   "name": "MDK Browser Extension",
-  "version": "0.4",
+  "version": "0.4.1",
   "manifest_version": 2,
   "description": "A collection of userscripts to make Moodle developers' life easier.",
   "icons": {

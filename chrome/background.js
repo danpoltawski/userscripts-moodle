@@ -17,6 +17,77 @@ function createHostPattern(hosts) {
     return pattern;
 }
 
+// Get an option.
+var getOption = function(name) {
+    var val = localStorage[name];
+    // Hack because localStorage stores everything as a string.
+    if (val === 'false') {
+        val = false;
+    }
+    return val || undefined;
+};
+// Get all options of a module.
+var getOptions = function(name) {
+    var newkey;
+    var options = {};
+    for (var key in localStorage) {
+        if (key.indexOf(name) === 0) {
+            newkey = key.substring(name.length + 1);
+            translation = translateOption(newkey, localStorage[key]);
+            options[translation[0]] = translation[1];
+        }
+    }
+    return options;
+};
+// Save an option.
+var saveOption = function(name, value) {
+    localStorage[name] = value;
+};
+// Translate an option.
+var translateOption = function(name, value) {
+    var i, j, newval, newnewval;
+    if (name.match(/-listComma$/)) {
+        name = name.replace(/-listComma$/, '');
+        newval = value.split(',');
+        for (i in newval) {
+            newval[i] = newval[i].trim();
+        }
+        value = newval;
+    } else if (name.match(/-listPipe$/)) {
+        name = name.replace(/-listPipe$/, '');
+        newval = value.split('|');
+        for (i in newval) {
+            newval[i] = newval[i].trim();
+        }
+        value = newval;
+    } else if (name.match(/-dictPipeColon$/)) {
+        name = name.replace(/-dictPipeColon$/, '');
+        newval = value.split('|');
+        value = {};
+        for (i in newval) {
+            newnewval = newval[i].split(':');
+            value[newnewval[0]] = newnewval[1].trim() || undefined;
+        }
+    } else if (name.match(/-dictLnColon$/)) {
+        name = name.replace(/-dictLnColon$/, '');
+        newval = value.split('\n');
+        value = {};
+        for (i in newval) {
+            newnewval = newval[i].split(':');
+            value[newnewval[0]] = newnewval[1].trim() || undefined;
+        }
+    }
+    return [name, value];
+};
+// Messaging system to load the config.
+chrome.extension.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.action == 'getConfig') {
+            sendResponse(getOptions(request.module));
+        }
+    }
+);
+
 // Create host patterns.
 var hostPattern = localStorage['mdk_hosts'];
 if (hostPattern) {
@@ -29,8 +100,7 @@ var pullBranchHostPattern = 'https?://tracker\\.moodle\\.org/(secure/EditIssue|b
 var testerHostPattern = 'https?://tracker\\.moodle\\.org/(secure/EditIssue|browse/MDL-).*';
 
 // When a tab is updated.
-// TODO Use proper messaging to send the configuration to the tab.
-// TODO Use events like chrome.webNavigation.onDOMContentLoaded?gi
+// TODO Use events like chrome.webNavigation.onDOMContentLoaded?
 // TODO Register events on install to set persistent to False?
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     var settings, script, i, line, lineinfo;
@@ -39,132 +109,71 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         return;
     }
 
-    // Loading Toolbar.
-    if (tab.url.match(hostPattern) && localStorage['mdk_toolbar_enabled'] == 1) {
-        if (tab.url.match(hostPattern)) {
-            settings = {
-                code:   'var mdkToolbarSettings = { ' +
-                            'admin_login: "' + localStorage['mdk_toolbar_admin_login'] + '",' +
-                            'admin_password: "' + localStorage['mdk_toolbar_admin_password'] + '",' +
-                            'teacher_prefix: "' + localStorage['mdk_toolbar_teacher_prefix'] + '",' +
-                            'teacher_password: "' + localStorage['mdk_toolbar_teacher_password'] + '",' +
-                            'teacher_count: "' + localStorage['mdk_toolbar_teacher_count'] + '",' +
-                            'student_prefix: "' + localStorage['mdk_toolbar_student_prefix'] + '",' +
-                            'student_password: "' + localStorage['mdk_toolbar_student_password'] + '",' +
-                            'student_count: "' + localStorage['mdk_toolbar_student_count'] + '"' +
-                        ' };'
-            };
-            script = {
-                file: 'mdk-toolbar.user.js'
-            };
-            chrome.tabs.executeScript(tabId, settings);
-            chrome.tabs.executeScript(tabId, script);
-        }
+    /**
+     * MDK Toolbar.
+     */
+    if (getOption('mdk_toolbar_enabled') && tab.url.match(hostPattern)) {
+        script = {
+            file: 'mdk-toolbar.user.js'
+        };
+        chrome.tabs.executeScript(tabId, script);
     }
 
-    // Tracker scripts.
+    /**
+     * Tracker scripts.
+     */
     if (tab.url.match(trackerHostPattern)) {
 
-        // Loading Pull Manager Helper.
-        if (localStorage['mdk_pull_request_helper_enabled'] == 1) {
+        /**
+         * Pull Request Helper.
+         */
+        if (getOption('mdk_pull_request_helper_enabled')) {
             script = {
                 file: 'pull-request-helper.user.js'
             };
             chrome.tabs.executeScript(tabId, script);
         }
 
-        // Loading Tracker Toggle Moodle Menu.
-        if (localStorage['mdk_tracker_toggle_moodle_menu_enabled'] == 1) {
+        /**
+         * Tracker Toggle Moodle.org Menu.
+         */
+        if (getOption('mdk_tracker_toggle_moodle_menu_enabled')) {
             script = {
                 file: 'tracker-toggle-moodle-menu.user.js'
             };
             chrome.tabs.executeScript(tabId, script);
         }
 
-        // Loading Tracker Tester Helper.
-        if (tab.url.match(testerHostPattern) && localStorage['mdk_tracker_tester_helper_enabled'] == 1) {
+        /**
+         * MDK Tracker Tester Helper.
+         */
+        if (getOption('mdk_tracker_tester_helper_enabled') && tab.url.match(testerHostPattern)) {
             script = {
                 file: 'mdk-tracker-tester.user.js'
             };
             chrome.tabs.executeScript(tabId, script);
         }
 
-        // Loading Tracker Pull Branches.
-        if (tab.url.match(pullBranchHostPattern) && localStorage['mdk_tracker_pull_branches_enabled'] == 1) {
-
-            // Default branches.
-            var default_branches = localStorage['mdk_tracker_pull_branches_default_branches'].split(',');
-            var default_branches_txt = '[';
-            if (default_branches.length > 0) {
-                for (i in default_branches) {
-                    default_branches[i] = '"' + default_branches[i].trim() + '"';
-                }
-                default_branches_txt += default_branches.join(',');
-            }
-            default_branches_txt += ']';
-
-            // Versions naming.
-            var version_naming = localStorage['mdk_tracker_pull_branches_versions'].split('\n');
-            var version_naming_txt = '{';
-            var version_name, version_translation;
-            var version_naming_obj = [];
-            if (version_naming.length > 0) {
-                for (i in version_naming) {
-                    line = version_naming[i];
-                    lineinfo = line.split(':');
-                    if (lineinfo.length == 2) {
-                        version_name = lineinfo[0].trim();
-                        version_translation = lineinfo[1].trim();
-                        version_naming_obj[version_naming_obj.length] = version_name + ': "' + version_translation + '"';
-                    }
-                }
-                version_naming_txt += version_naming_obj.join(',');
-            }
-            version_naming_txt += '}';
-
-            // Suffix.
-            var suffix_naming = localStorage['mdk_tracker_pull_branches_suffix'].split('\n');
-            var suffix_naming_txt = '{';
-            var suffix_name, suffix_translation;
-            var suffix_naming_obj = [];
-            if (suffix_naming.length > 0) {
-                for (i in suffix_naming) {
-                    line = suffix_naming[i];
-                    lineinfo = line.split(':');
-                    if (lineinfo.length == 2) {
-                        suffix_name = lineinfo[0].trim();
-                        suffix_translation = lineinfo[1].trim();
-                        suffix_naming_obj[suffix_naming_obj.length] = suffix_name + ': "' + suffix_translation + '"';
-                    }
-                }
-                suffix_naming_txt += suffix_naming_obj.join(',');
-            }
-            suffix_naming_txt += '}';
-
-            settings = {
-                code:   'var mdkTrackerPullBranchesSettings = { ' +
-                            'repository: "' + localStorage['mdk_tracker_pull_branches_repository'] + '",'  +
-                            'branch: "' + localStorage['mdk_tracker_pull_branches_branch'] + '",'  +
-                            'compare_url: "' + localStorage['mdk_tracker_pull_branches_compare_url'] + '",'  +
-                            'default_branches: ' + default_branches_txt + ','  +
-                            'compare_with_origin: "' + localStorage['mdk_tracker_pull_branches_compare_with_origin'] + '",'  +
-                            'versions: ' + version_naming_txt + ','  +
-                            'suffix: ' + suffix_naming_txt +
-                        ' };'
-            };
+        /**
+         * MDK Tracker Pull Branches.
+         */
+        if (getOption('mdk_tracker_pull_branches_enabled') && tab.url.match(pullBranchHostPattern)) {
             script = {
                 file: 'mdk-tracker-pull-branches.user.js'
             };
-            chrome.tabs.executeScript(tabId, settings);
             chrome.tabs.executeScript(tabId, script);
         }
     }
 
-    // Moodle.org scripts.
+    /**
+     * Moodle.org.
+     */
     if (tab.url.match(moodleHostPattern)) {
 
-        // Loading Tracker Tester Helper.
-        if (localStorage['mdk_filemanager_shrinker_enabled'] == 1) {
+        /**
+         * File Manager Shrinker.
+         */
+        if (getOption('mdk_filemanager_shrinker_enabled')) {
             script = {
                 file: 'filemanager-shrinker.user.js'
             };
@@ -179,7 +188,7 @@ if (!localStorage['mdk_hosts']) {
     localStorage['mdk_hosts'] = 'localhost\n127.0.0.1\n*.moodle.local';
 }
 if (!localStorage['mdk_filemanager_shrinker_enabled']) {
-    localStorage['mdk_filemanager_shrinker_enabled'] = 1;
+    localStorage['mdk_filemanager_shrinker_enabled'] = 0;
 }
 if (!localStorage['mdk_pull_request_helper_enabled']) {
     localStorage['mdk_pull_request_helper_enabled'] = 1;
@@ -223,15 +232,31 @@ if (!localStorage['mdk_tracker_pull_branches_branch']) {
 if (!localStorage['mdk_tracker_pull_branches_compare_url']) {
     localStorage['mdk_tracker_pull_branches_compare_url'] = 'https://github.com/YourUserName/moodle/compare/%with%...%branch%';
 }
-if (!localStorage['mdk_tracker_pull_branches_default_branches']) {
-    localStorage['mdk_tracker_pull_branches_default_branches'] = '23, 24, master';
+if (!localStorage['mdk_tracker_pull_branches_default_branches-listComma']) {
+    // Setting name changed in 0.4.1.
+    localStorage['mdk_tracker_pull_branches_default_branches-listComma'] = localStorage['mdk_tracker_pull_branches_default_branches'] || '23, 24, master';
 }
 if (!localStorage['mdk_tracker_pull_branches_compare_with_origin']) {
     localStorage['mdk_tracker_pull_branches_compare_with_origin'] = true;
 }
-if (!localStorage['mdk_tracker_pull_branches_versions']) {
-    localStorage['mdk_tracker_pull_branches_versions'] = '19: -19\n21: -21\n22: -22\n23: -23\n24: -24\nmaster: -master';
+if (!localStorage['mdk_tracker_pull_branches_versions-dictLnColon']) {
+    // Setting name changed in 0.4.1.
+    localStorage['mdk_tracker_pull_branches_versions-dictLnColon'] = localStorage['mdk_tracker_pull_branches_versions'] || '19: -19\n21: -21\n22: -22\n23: -23\n24: -24\nmaster: -master';
 }
-if (!localStorage['mdk_tracker_pull_branches_suffix']) {
-    localStorage['mdk_tracker_pull_branches_suffix'] = 'before: -\nafter:';
+if (!localStorage['mdk_tracker_pull_branches_suffix-listPipe']) {
+    var mdk_tracker_pull_branches_suffix = '-|';
+    // Setting name changed in 0.4.1.
+    if (localStorage['mdk_tracker_pull_branches_suffix']) {
+        mdk_tracker_pull_branches_suffix = localStorage['mdk_tracker_pull_branches_suffix'];
+        mdk_tracker_pull_branches_suffix.replace('\n', '|');
+        mdk_tracker_pull_branches_suffix.replace('before:', '');
+        mdk_tracker_pull_branches_suffix.replace('after:', '');
+    }
+    localStorage['mdk_tracker_pull_branches_suffix-listPipe'] = mdk_tracker_pull_branches_suffix;
+}
+if (!localStorage['mdk_tracker_tester_helper_enabled']) {
+    localStorage['mdk_tracker_tester_helper_enabled'] = 1;
+}
+if (!localStorage['mdk_tracker_toggle_moodle_menu_enabled']) {
+    localStorage['mdk_tracker_toggle_moodle_menu_enabled'] = 1;
 }
