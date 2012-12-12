@@ -180,6 +180,16 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
             chrome.tabs.executeScript(tabId, script);
         }
 
+        /**
+         * Moodle.org Markdown Selector.
+         */
+        if (getOption('mdk_moodleorg_markdown_selector_enabled')) {
+            script = {
+                file: 'moodleorg-markdown-selector.user.js'
+            };
+            chrome.tabs.executeScript(tabId, script);
+        }
+
     }
 });
 
@@ -188,13 +198,16 @@ if (!localStorage['mdk_hosts']) {
     localStorage['mdk_hosts'] = 'localhost\n127.0.0.1\n*.moodle.local';
 }
 if (!localStorage['mdk_filemanager_shrinker_enabled']) {
-    localStorage['mdk_filemanager_shrinker_enabled'] = 0;
+    localStorage['mdk_filemanager_shrinker_enabled'] = false;
+}
+if (!localStorage['mdk_moodleorg_markdown_selector_enabled']) {
+    localStorage['mdk_moodleorg_markdown_selector_enabled'] = false;
 }
 if (!localStorage['mdk_pull_request_helper_enabled']) {
-    localStorage['mdk_pull_request_helper_enabled'] = 1;
+    localStorage['mdk_pull_request_helper_enabled'] = true;
 }
 if (!localStorage['mdk_toolbar_enabled']) {
-    localStorage['mdk_toolbar_enabled'] = 1;
+    localStorage['mdk_toolbar_enabled'] = true;
 }
 if (!localStorage['mdk_toolbar_admin_login']) {
     localStorage['mdk_toolbar_admin_login'] = 'admin';
@@ -221,7 +234,7 @@ if (!localStorage['mdk_toolbar_student_count']) {
     localStorage['mdk_toolbar_student_count'] = 10;
 }
 if (!localStorage['mdk_tracker_pull_branches_enabled']) {
-    localStorage['mdk_tracker_pull_branches_enabled'] = 1;
+    localStorage['mdk_tracker_pull_branches_enabled'] = true;
 }
 if (!localStorage['mdk_tracker_pull_branches_repository']) {
     localStorage['mdk_tracker_pull_branches_repository'] = 'git://github.com/YourUserName/moodle.git';
@@ -255,8 +268,8 @@ if (!localStorage['mdk_tracker_pull_branches_suffix-listPipe']) {
     localStorage['mdk_tracker_pull_branches_suffix-listPipe'] = mdk_tracker_pull_branches_suffix;
 }
 if (!localStorage['mdk_tracker_tester_helper_enabled']) {
-    localStorage['mdk_tracker_tester_helper_enabled'] = 1;
+    localStorage['mdk_tracker_tester_helper_enabled'] = true;
 }
 if (!localStorage['mdk_tracker_toggle_moodle_menu_enabled']) {
-    localStorage['mdk_tracker_toggle_moodle_menu_enabled'] = 1;
+    localStorage['mdk_tracker_toggle_moodle_menu_enabled'] = true;
 }
