@@ -335,6 +335,12 @@ if (self && self.port && self.port.on) {
         mdkTrackerPullBranches.settings.load(options);
         mdkTrackerPullBranches.init();
     });
+} else if (chrome && chrome.extension && chrome.extension.sendMessage) {
+    // Chrome extension specific.
+    chrome.extension.sendMessage({ action: 'getConfig', module: 'mdk_tracker_pull_branches'}, function(response) {
+        mdkTrackerPullBranches.settings.load(response);
+        mdkTrackerPullBranches.init();
+    });
 } else {
     // Greasemonkey fallback.
     mdkTrackerPullBranches.init();
