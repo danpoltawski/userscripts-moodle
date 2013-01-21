@@ -31,7 +31,7 @@ var mdkTrackerTester = function() {
 
     // Scripts.
     var fields = {
-        instructions: 'field-customfield_10117',
+        instructions: 'customfield_10117-val',
         testing: 'customfield_10117',
         status: 'status-val'
     };
@@ -40,9 +40,15 @@ var mdkTrackerTester = function() {
         field: null,
         attach_events: function() {
             this.field.addEventListener('click', function(e) {
+                // Do nothing on the main target.
+                if (e.target == e.currentTarget) {
+                    return;
+                }
+
                 var node = e.target;
                 var tag = node.tagName.toLowerCase();
-                while (tag == 'a' || tag == 'b' || tag == 'i' || tag == 'strong' || tag == 'em' || tag == 'div') {
+                while (tag == 'a' || tag == 'b' || tag == 'i' || tag == 'strong' || tag == 'em' || tag == 'div' ||
+                        tag == 'ul' || tag == 'ol') {
                     node = node.parentNode;
                     tag = node.tagName.toLowerCase();
 
@@ -61,11 +67,8 @@ var mdkTrackerTester = function() {
             });
         },
         disable_editing: function() {
-            var editable = this.field.parentNode;
-            if (editable) {
-                editable.classList.remove('inactive');
-                editable.setAttribute('title', '');
-            }
+            this.field.classList.remove('inactive');
+            this.field.setAttribute('title', '');
         },
         init: function(node) {
             this.field = node;
