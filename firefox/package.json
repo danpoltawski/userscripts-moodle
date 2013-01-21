@@ -3,7 +3,7 @@
     "license": "GPL",
     "author": "Frédéric Massart <fred@moodle.com> (http://fmcorz.net)",
     "homepage": "https://github.com/danpoltawski/userscripts-moodle",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "fullName": "MDK Browser Extension",
     "id": "jid1-yzSozbwZo3wKIg",
     "description": "A collection of userscripts to make Moodle developers' life easier.",
