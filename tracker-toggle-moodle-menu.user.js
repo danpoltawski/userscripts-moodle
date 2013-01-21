@@ -7,7 +7,7 @@
 // @match       https://tracker.moodle.org/*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.19
+// @version     0.20
 // ==/UserScript==
 
 // Settings.
@@ -18,7 +18,7 @@ var settings = {
 // Limit to Jira, shoudln't be necessary.
 if (document.body.id == 'jira') {
     var toggle_object = {
-        menuid: 'moodle-menu',
+        menuid: 'custom-menu-1',
         navid: 'main-nav',
         menu: null,
         nav: null,

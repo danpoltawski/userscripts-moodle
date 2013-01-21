@@ -7,7 +7,7 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
-// @version       0.6
+// @version       0.7
 // ==/UserScript==
 
 (function() {
@@ -36,48 +36,58 @@
     var MOODLE_20_STABLE = document.getElementById('customfield_10113-val');
     var MOODLE_19_STABLE = document.getElementById('customfield_10116-val');
 
-    var parent = document.getElementById('customfieldmodule');
+    var template =
+            '<li id="userscript_integrator_cs" class="item">' +
+                '<div class="wrap">' +
+                    '<strong class="name" title="Integrators Cheat Sheet">Integrators Cheat Sheet:</strong>' +
+                    '<div id="userscript_integrator_cs-val" class="value type-textarea">' +
+                        '<pre style="overflow: auto;">%cheatsheet%</pre>' +
+                    '</div>' +
+                '</div>' +
+            '</li>';
 
-    var s= '<p>Integrators Cheat Sheet:</p><pre>';
+    var cs = '';
 
     if (MASTER) {
-        s+= "git checkout master\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MASTER) + "\n\n";
+        cs += "git checkout master\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MASTER) + "\n\n";
     }
 
     if (MOODLE_24_STABLE) {
-        s+= "git checkout MOODLE_24_STABLE\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_24_STABLE) + "\n\n";
+        cs += "git checkout MOODLE_24_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_24_STABLE) + "\n\n";
     }
 
     if (MOODLE_23_STABLE) {
-        s+= "git checkout MOODLE_23_STABLE\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_23_STABLE) + "\n\n";
+        cs += "git checkout MOODLE_23_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_23_STABLE) + "\n\n";
     }
 
     if (MOODLE_22_STABLE) {
-        s+= "git checkout MOODLE_22_STABLE\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_22_STABLE) + "\n\n";
+        cs += "git checkout MOODLE_22_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_22_STABLE) + "\n\n";
     }
 
     if (MOODLE_21_STABLE) {
-        s+= "git checkout MOODLE_21_STABLE\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_21_STABLE) + "\n\n";
+        cs += "git checkout MOODLE_21_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_21_STABLE) + "\n\n";
     }
 
     if (MOODLE_20_STABLE) {
-        s+= "git checkout MOODLE_20_STABLE\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_20_STABLE) + "\n\n";
+        cs += "git checkout MOODLE_20_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_20_STABLE) + "\n\n";
     }
 
     if (MOODLE_19_STABLE) {
-        s+= "git checkout MOODLE_19_STABLE\n";
-        s+= 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_19_STABLE) + "\n\n";
+        cs += "git checkout MOODLE_19_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_19_STABLE) + "\n\n";
     }
 
-    // prepare div
-    var integratorDiv = document.createElement('div');
-    integratorDiv.innerHTML = s;
-    integratorDiv.setAttribute('style', 'border-top: 1px solid #DDD;');
-    parent.insertBefore(integratorDiv, document.getElementById('tabCellPane1'));
+    var output = template.replace('%cheatsheet%', cs.trim());
+    var ul = document.getElementById('tabCellPane1');
+
+    if (ul) {
+        ul.innerHTML = output + ul.innerHTML;
+    }
+
 })();

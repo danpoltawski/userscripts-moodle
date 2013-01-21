@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.42
+// @version     0.50
 // ==/UserScript==
 
 var mdkTrackerPullBranches = {
@@ -31,7 +31,7 @@ var mdkTrackerPullBranches = {
         compare_with_origin: true,
 
         // The default branches to select.
-        default_branches: [ '22', '23', '24', 'master' ],
+        default_branches: [ '23', '24', 'master' ],
 
         // How do you name your versions in the branches?
         versions: {
@@ -96,9 +96,11 @@ var mdkTrackerPullBranches = {
 
     dialogs: {
         ids: [
+            'edit-issue-dialog',
             'workflow-transition-951-dialog',
             'workflow-transition-5-dialog',
-            'workflow-transition-821-dialog'
+            'workflow-transition-821-dialog',
+            'workflow-transition-961-dialog'
         ]
     },
 
@@ -314,14 +316,20 @@ var mdkTrackerPullBranches = {
 
     set_events: function() {
         var scope = this;
+        var callback = function(f) {
+            if (f.target.parentNode != f.currentTarget) {
+                return;
+            }
+            scope.add_buttons();
+        };
+        for (var i in scope.dialogs.ids) {
+            var node = document.getElementById(scope.dialogs.ids[i]);
+            if (node) {
+                node.addEventListener('DOMNodeInserted', callback, false);
+            }
+        }
         document.body.addEventListener('DOMNodeInserted', function(e) {
             if (scope.dialogs.ids.indexOf(e.target.id) > -1) {
-                var callback = function(f) {
-                    if (f.target.parentNode != f.currentTarget) {
-                        return;
-                    }
-                    scope.add_buttons();
-                };
                 e.target.addEventListener('DOMNodeInserted', callback, false);
             }
         }, false);
@@ -329,10 +337,18 @@ var mdkTrackerPullBranches = {
 
 };
 
+var self = self || undefined;
+var chrome = chrome || undefined;
 if (self && self.port && self.port.on) {
     // Firefox extension specific.
     self.port.on("loadConfig", function(options) {
         mdkTrackerPullBranches.settings.load(options);
+        mdkTrackerPullBranches.init();
+    });
+} else if (chrome && chrome.extension && chrome.extension.sendMessage) {
+    // Chrome extension specific.
+    chrome.extension.sendMessage({ action: 'getConfig', module: 'mdk_tracker_pull_branches'}, function(response) {
+        mdkTrackerPullBranches.settings.load(response);
         mdkTrackerPullBranches.init();
     });
 } else {
