@@ -11,9 +11,10 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.500
+// @version     0.510
 // ==/UserScript==
 
+// Note: this disables the 'inline editing' of the testing instructions.
 // TODO Support for button to populate test instructions in dialogs.
 
 var mdkTrackerTester = function() {
@@ -66,12 +67,10 @@ var mdkTrackerTester = function() {
                 editable.setAttribute('title', '');
             }
         },
-        init: function(node, status) {
+        init: function(node) {
             this.field = node;
-            if (status && status.textContent == 'Testing in progress') {
-                this.disable_editing();
-                this.attach_events();
-            }
+            this.disable_editing();
+            this.attach_events();
         }
     };
 
@@ -114,10 +113,9 @@ var mdkTrackerTester = function() {
     };
 
     var field = document.getElementById(fields.instructions);
-    var status = document.getElementById(fields.status);
     if (field) {
         th = tester_helper;
-        th.init(field, status);
+        th.init(field);
     }
 
     var textarea = document.getElementById(fields.testing);
