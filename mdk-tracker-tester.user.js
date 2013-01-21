@@ -11,8 +11,11 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.400
+// @version     0.510
 // ==/UserScript==
+
+// Note: this disables the 'inline editing' of the testing instructions.
+// TODO Support for button to populate test instructions in dialogs.
 
 var mdkTrackerTester = function() {
 
@@ -29,29 +32,44 @@ var mdkTrackerTester = function() {
     // Scripts.
     var fields = {
         instructions: 'field-customfield_10117',
-        testing: 'customfield_10117'
+        testing: 'customfield_10117',
+        status: 'status-val'
     };
 
     var tester_helper = {
         field: null,
         attach_events: function() {
-            nodes = this.field.querySelectorAll('p, li, h1, h2, h3, h4');
-            for (var i in nodes) {
-                this.colour_switcher(nodes[i]);
-            }
-        },
-        colour_switcher: function(node) {
-            var index = -1;
-            node.onclick = function() {
+            this.field.addEventListener('click', function(e) {
+                var node = e.target;
+                var tag = node.tagName.toLowerCase();
+                while (tag == 'a' || tag == 'b' || tag == 'i' || tag == 'strong' || tag == 'em' || tag == 'div') {
+                    node = node.parentNode;
+                    tag = node.tagName.toLowerCase();
+
+                    // If we reached the main field, do nothing.
+                    if (node == e.currentTarget) {
+                        return;
+                    }
+                }
+                var index = node.getAttribute('mdkTesterColourIndex') || -1;
                 index++;
                 if (index > settings.colours_steps.length -1) {
                     index = 0;
                 }
-                this.style.color = settings.colours_steps[index];
-            };
+                node.setAttribute('mdkTesterColourIndex', index);
+                node.style.color = settings.colours_steps[index];
+            });
+        },
+        disable_editing: function() {
+            var editable = this.field.parentNode;
+            if (editable) {
+                editable.classList.remove('inactive');
+                editable.setAttribute('title', '');
+            }
         },
         init: function(node) {
             this.field = node;
+            this.disable_editing();
             this.attach_events();
         }
     };
