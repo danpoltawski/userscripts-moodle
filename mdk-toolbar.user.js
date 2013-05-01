@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.421
+// @version         0.430
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -450,13 +450,13 @@ if (!!window.opera) {
 // TODO Do not init and destroy mdkToolbar when not on Moodle site.
 mdkToolbar.init(unsafeWindow);
 
-if (self && self.port && self.port.on) {
+if (typeof self !== 'undefined' && typeof self.port !== 'undefined' && typeof self.port.on !== 'undefined') {
     // Firefox extension specific.
     self.port.on("loadConfig", function(options) {
         mdkToolbar.settings.load(options);
         mdkToolbar.display();
     });
-} else if (chrome && chrome.extension && chrome.extension.sendMessage) {
+} else if (typeof chrome !== 'undefined' && typeof chrome.extension !== 'undefined' && typeof chrome.extension.sendMessage !== 'undefined') {
     // Chrome extension specific.
     chrome.extension.sendMessage({ action: 'getConfig', module: 'mdk_toolbar'}, function(response) {
         mdkToolbar.settings.load(response);
@@ -466,3 +466,4 @@ if (self && self.port && self.port.on) {
     // Greasemonkey fallback.
     mdkToolbar.display();
 }
+
