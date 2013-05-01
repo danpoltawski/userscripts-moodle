@@ -303,7 +303,14 @@ var mdkToolbar = {
                 node.removeChild(node.firstChild);
             }
             var breadcrumb = node.textContent;
-            window.prompt('Copy the breadcrumb', breadcrumb.replace(new RegExp(/ \//g), ''));
+            if (breadcrumb.match(new RegExp(/\u25ba/))) {
+                // Remove the separator when we found ►.
+                breadcrumb = breadcrumb.replace(new RegExp(/ \//g), '');
+            } else {
+                // Add an extra space on the other side of the /.
+                breadcrumb = breadcrumb.replace(new RegExp(/ \//g), ' / ');
+            }
+            window.prompt('Copy the breadcrumb', breadcrumb);
         }
         return false;
     },
