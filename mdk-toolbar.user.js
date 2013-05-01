@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.420
+// @version         0.421
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -43,6 +43,7 @@ var mdkToolbar = {
             'boxxie',
             'brick',
             'canvas',
+            'clean',
             'formal_white',
             'formfactor',
             'fusion',
