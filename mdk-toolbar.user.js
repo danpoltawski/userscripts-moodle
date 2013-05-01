@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.410
+// @version         0.420
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -115,12 +115,18 @@ var mdkToolbar = {
         e.style.background = '#ccc';
         e.style.padding = '1px 10px 1px 4px';
         e.style.color = '#333';
+        e.style.fontSize = '12px';
         e.style.opacity = this.settings.get('opacity');
 
         // Style tweaks.
         p = D.createElement('style');
         p.type = 'text/css';
-        p.textContent = 'body { margin-top: 24px; } #dock { top: 24px; }';
+        p.textContent = 'html { margin-top: 24px; }';
+        p.textContent += '#dock { top: 24px; }';
+        p.textContent += 'header.navbar-fixed-top { top:24px; }';
+        p.textContent += '#mdkToolbar select { padding: 0; font-size: 11px; line-height: auto; height: auto; margin: 0; }';
+        p.textContent += '#mdkToolbar a { color: #000; text-decoration: none; }';
+        p.textContent += '#mdkToolbar a:hover { color: #000; text-decoration: underline; }';
         e.appendChild(p);
 
         // Close button.
