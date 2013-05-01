@@ -4,6 +4,10 @@
     <link rel="stylesheet" type="text/css" href="bootstrap.css" />
     <style type="text/css">
         body { margin: 1em;}
+        select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+            height: auto;
+            width: 50%;
+        }
     </style>
     <script src="options_magic.js"></script>
 </head>
@@ -57,18 +61,18 @@
                 <input type='text' id='mdk_tracker_pull_branches_compare_url' name='mdk_tracker_pull_branches_compare_url' value='' />
                 <span class="help-block">Use %branch% and %with% as place holders.</span>
                 <label for='mdk_tracker_pull_branches_default_branches'>Default branches</label>
-                <input type='text' id='mdk_tracker_pull_branches_default_branches' name='mdk_tracker_pull_branches_default_branches' value='' />
+                <input type='text' id='mdk_tracker_pull_branches_default_branches' name='mdk_tracker_pull_branches_default_branches-listComma' value='' />
                 <span class="help-block">Comma separated list (22, 23, master).</span>
                 <label class='checkbox'>
                     <input type='checkbox' name='mdk_tracker_pull_branches_compare_with_origin' value='1' /> Compare with origin
                 </label>
                 <span class='help-block'>If you are using github you won't have to push stable branches any more.</span>
                 <label for='mdk_tracker_pull_branches_versions'>Version naming</label>
-                <textarea id='mdk_tracker_pull_branches_versions' rows='3' name='mdk_tracker_pull_branches_versions'></textarea>
+                <textarea id='mdk_tracker_pull_branches_versions' rows='3' name='mdk_tracker_pull_branches_versions-dictLnColon'></textarea>
                 <span class="help-block">The value of %version%. One definition per line (22: -m22)</span>
                 <label for='mdk_tracker_pull_branches_suffix'>Suffix naming</label>
-                <textarea id='mdk_tracker_pull_branches_suffix' rows='2' name='mdk_tracker_pull_branches_suffix'></textarea>
-                <span class="help-block">How to separate the suffix fron the rest. Two lines starting with 'before:' and 'after:'.</span>
+                <input type='text' id='mdk_tracker_pull_branches_suffix' name='mdk_tracker_pull_branches_suffix-listPipe' />
+                <span class="help-block">How to separate the suffix from the rest of the branch. Separate what has to be before the suffix from what has to be after with a pipe.</span>
             </div>
         </fieldset>
         </form>

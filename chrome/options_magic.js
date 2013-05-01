@@ -21,8 +21,8 @@ var save_option = function(e) {
     var el = e.target;
     if (el.name) {
         var val = el.value || 0;
-        if (el.type == 'checkbox' && !el.checked) {
-            val = 0;
+        if (el.type == 'checkbox') {
+            val = el.checked;
         }
         localStorage[el.name] = val;
     }
@@ -30,13 +30,18 @@ var save_option = function(e) {
 
 // Restore the option of an element.
 var restore_option = function(el) {
+    console.log(localStorage);
     var val = localStorage[el.name];
     if (!val) {
         return;
     }
     if (el.type == 'checkbox') {
-        elval = el.value || 0;
-        el.checked = (elval == val) ? true : false;
+        if (val === 'false' || val === 0 || val === '0') {
+            val = false;
+        } else {
+            val = true;
+        }
+        el.checked = val;
     } else if (el.type == 'textarea') {
         el.innerText = val;
     } else {

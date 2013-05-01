@@ -15,105 +15,87 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.400
+// @version         0.410
 // ==/UserScript==
 
-var settings = {
-    admin_login: 'admin',
-    admin_password: 'test',
-    student_prefix: 's',
-    student_count: 10,
-    student_password: 'test',
-    teacher_prefix: 't',
-    teacher_count: 3,
-    teacher_password: 'test',
-    langs: [
-        'en',
-        'fr',
-        'he*',
-        'ja'
-    ],
-    themes: [
-        'afterburner',
-        'anomaly',
-        'arialist',
-        'binarius',
-        'boxxie',
-        'brick',
-        'canvas',
-        'formal_white',
-        'formfactor',
-        'fusion',
-        'leatherbound',
-        'magazine',
-        'mymobile',
-        'nimble',
-        'nonzero',
-        'overlay',
-        'serenity',
-        'sky_high',
-        'splash',
-        'standard'
-    ],
-    opacity: '.8'
-};
-
-var mdkToolbarSettings = mdkToolbarSettings || {};
-
-var SM = (function (defaults, overwrite) {
-
-    var my = {};
-    my.defaults = defaults;
-    my.storage = {};
-    my.get = function (key) {
-        var val = this.storage[key];
-        if (val === undefined) {
-            val = this.defaults[key];
-        }
-        return val;
-    };
-    my.set = function (key, val) {
-        this.storage[key] = val;
-    };
-
-    // Overwrite the settings passed.
-    if (overwrite) {
-        for (var key in overwrite) {
-            my.set(key, overwrite[key]);
-        }
-    }
-
-    return my;
-
-}(settings, mdkToolbarSettings));
-
 var mdkToolbar = {
+
+    settings: {
+        admin_login: 'admin',
+        admin_password: 'test',
+        student_prefix: 's',
+        student_count: 10,
+        student_password: 'test',
+        teacher_prefix: 't',
+        teacher_count: 3,
+        teacher_password: 'test',
+        langs: [
+            'en',
+            'fr',
+            'he*',
+            'ja'
+        ],
+        themes: [
+            'afterburner',
+            'anomaly',
+            'arialist',
+            'binarius',
+            'boxxie',
+            'brick',
+            'canvas',
+            'formal_white',
+            'formfactor',
+            'fusion',
+            'leatherbound',
+            'magazine',
+            'mymobile',
+            'nimble',
+            'nonzero',
+            'overlay',
+            'serenity',
+            'sky_high',
+            'splash',
+            'standard'
+        ],
+        opacity: '.8',
+
+        // Settings functions.
+        get: function(name) {
+            return this[name];
+        },
+        load: function(settings) {
+            for (var key in settings) {
+                this.set(key, settings[key]);
+            }
+        },
+        set: function(name, setting) {
+            this[name] = setting;
+        }
+    },
+
     id: 'mdkToolbar',
     loadingid: 'mdkLoadingPic',
     loginid: 'mdkLoginiFrame',
     M: null,
     purgeid: 'mdkPurgeCacheiFrame',
-    unsafeWindow: null,
-    settings: null,
 
-    init: function(window, settings) {
+    init: function(window) {
+        // Try to get the M variable.
+        this.M = window.M || undefined;
+    },
+
+    display: function() {
         // Toolbar already there.
         if (document.getElementById(this.id)) {
             return;
         }
 
-        // Limit to Moodle sites.
-        this.M = window.M || undefined;
+        // Make sure M was found, which more or less guarantee that we are
+        // on a Moodle site.
         if (!this.M) {
             return;
         }
 
-        this.settings = settings;
-
-        this.display();
-    },
-
-    display: function() {
         var p, e, x;
         var D = document;
         var B = document.body;
@@ -260,6 +242,9 @@ var mdkToolbar = {
             }
             var loc = D.location;
             var search = loc.search.replace(/&?lang=[a-z]+/, '');
+            if (!loc.origin) {
+                loc.origin = loc.protocol + '//' + loc.hostname;
+            }
             var url = loc.origin + loc.pathname + search;
             url += search !== '' ? '&' : '?';
             url += 'lang=' + this.value;
@@ -290,6 +275,9 @@ var mdkToolbar = {
             }
             var loc = document.location;
             var search = loc.search.replace(/&?theme=[a-z0-9]+/, '');
+            if (!loc.origin) {
+                loc.origin = loc.protocol + '//' + loc.hostname;
+            }
             var url = loc.origin + loc.pathname + search;
             url += search !== '' ? '&' : '?';
             url += 'theme=' + this.value;
@@ -380,13 +368,15 @@ var mdkToolbar = {
                 return;
             }
             document.body.removeChild(frame);
-            scope.loading(false);
             if (!noreload) {
                 window.location.reload();
+            } else {
+                scope.loading(false);
             }
         };
 
-        logininfo = document.getElementsByClassName('logininfo')[0].children;
+        scope.loading(true);
+        var logininfo = document.getElementsByClassName('logininfo')[0].children;
         // If there are two children, means two links, we are probably logged in.
         if (logininfo.length >= 2) {
             var el = document.createElement('iframe');
@@ -443,4 +433,22 @@ if (!!window.opera) {
     unsafeWindow = div.onclick();
 }
 
-mdkToolbar.init(unsafeWindow, SM);
+// TODO Do not init and destroy mdkToolbar when not on Moodle site.
+mdkToolbar.init(unsafeWindow);
+
+if (self && self.port && self.port.on) {
+    // Firefox extension specific.
+    self.port.on("loadConfig", function(options) {
+        mdkToolbar.settings.load(options);
+        mdkToolbar.display();
+    });
+} else if (chrome && chrome.extension && chrome.extension.sendMessage) {
+    // Chrome extension specific.
+    chrome.extension.sendMessage({ action: 'getConfig', module: 'mdk_toolbar'}, function(response) {
+        mdkToolbar.settings.load(response);
+        mdkToolbar.display();
+    });
+} else {
+    // Greasemonkey fallback.
+    mdkToolbar.display();
+}
