@@ -233,6 +233,12 @@ if (!localStorage['mdk_toolbar_student_password']) {
 if (!localStorage['mdk_toolbar_student_count']) {
     localStorage['mdk_toolbar_student_count'] = 10;
 }
+if (!localStorage['mdk_toolbar_langs-listComma']) {
+    localStorage['mdk_toolbar_langs-listComma'] = 'en,fr,he,ja';
+}
+if (!localStorage['mdk_toolbar_themes-listComma']) {
+    localStorage['mdk_toolbar_themes-listComma'] = 'afterburner,anomaly,arialist,binarius,boxxie,brick,canvas,clean,formal_white,formfactor,fusion,leatherbound,magazine,mymobile,nimble,nonzero,overlay,serenity,sky_high,splash,standard';
+}
 if (!localStorage['mdk_tracker_pull_branches_enabled']) {
     localStorage['mdk_tracker_pull_branches_enabled'] = true;
 }
