@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.50
+// @version     0.60
 // ==/UserScript==
 
 var mdkTrackerPullBranches = {
@@ -31,7 +31,7 @@ var mdkTrackerPullBranches = {
         compare_with_origin: true,
 
         // The default branches to select.
-        default_branches: [ '23', '24', 'master' ],
+        default_branches: [ '24', '25', 'master' ],
 
         // How do you name your versions in the branches?
         versions: {
@@ -41,6 +41,7 @@ var mdkTrackerPullBranches = {
             22: '-22',
             23: '-23',
             24: '-24',
+            25: '-25',
             master: '-master'
         },
 
@@ -78,6 +79,7 @@ var mdkTrackerPullBranches = {
             22: 'customfield_10711',
             23: 'customfield_11016',
             24: 'customfield_11110',
+            25: 'customfield_11410',
             master: 'customfield_10111'
         },
         diff: {
@@ -87,6 +89,7 @@ var mdkTrackerPullBranches = {
             22: 'customfield_10712',
             23: 'customfield_11017',
             24: 'customfield_11111',
+            25: 'customfield_11411',
             master: 'customfield_10112'
         },
         issue: 'key-val',
@@ -121,6 +124,7 @@ var mdkTrackerPullBranches = {
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='22' id='mdk_version_22' class='mdk_version'> 2.2</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='23' id='mdk_version_23' class='mdk_version'> 2.3</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='24' id='mdk_version_24' class='mdk_version'> 2.4</label></li>" +
+                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='25' id='mdk_version_25' class='mdk_version'> 2.5</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='master' id='mdk_version_master' class='mdk_version'> master</label></li>" +
                 "        </ul>" +
                 "        <div style='clear:both;'></div>" +
