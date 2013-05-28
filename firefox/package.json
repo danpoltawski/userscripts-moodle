@@ -148,7 +148,7 @@
             "title": "Tracker Pull Branches default branches",
             "description": "Comma separated list of the default branches to select (22, 23, master).",
             "type": "string",
-            "value": "23, 24, master"
+            "value": "24, 25, master"
         },
         {
             "name": "mdk_tracker_pull_branches_compare_with_origin",
@@ -162,7 +162,7 @@
             "title": "Tracker Pull Branches version naming",
             "description": "How do you name your version? List separated by pipes and colons. (22:-22|23:-23|24:-master)",
             "type": "string",
-            "value": "19:-19|21:-21|22:-22|23:-23|24:-24|master:-master"
+            "value": "19:-19|21:-21|22:-22|23:-23|24:-24|25:-25|master:-master"
         },
         {
             "name": "mdk_tracker_pull_branches_suffix-listPipe",
