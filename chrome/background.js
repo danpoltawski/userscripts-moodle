@@ -253,14 +253,14 @@ if (!localStorage['mdk_tracker_pull_branches_compare_url']) {
 }
 if (!localStorage['mdk_tracker_pull_branches_default_branches-listComma']) {
     // Setting name changed in 0.4.1.
-    localStorage['mdk_tracker_pull_branches_default_branches-listComma'] = localStorage['mdk_tracker_pull_branches_default_branches'] || '23, 24, master';
+    localStorage['mdk_tracker_pull_branches_default_branches-listComma'] = localStorage['mdk_tracker_pull_branches_default_branches'] || '24, 25, master';
 }
 if (!localStorage['mdk_tracker_pull_branches_compare_with_origin']) {
     localStorage['mdk_tracker_pull_branches_compare_with_origin'] = true;
 }
 if (!localStorage['mdk_tracker_pull_branches_versions-dictLnColon']) {
     // Setting name changed in 0.4.1.
-    localStorage['mdk_tracker_pull_branches_versions-dictLnColon'] = localStorage['mdk_tracker_pull_branches_versions'] || '19: -19\n21: -21\n22: -22\n23: -23\n24: -24\nmaster: -master';
+    localStorage['mdk_tracker_pull_branches_versions-dictLnColon'] = localStorage['mdk_tracker_pull_branches_versions'] || '19: -19\n21: -21\n22: -22\n23: -23\n24: -24\n25: -25\nmaster: -master';
 }
 if (!localStorage['mdk_tracker_pull_branches_suffix-listPipe']) {
     var mdk_tracker_pull_branches_suffix = '-|';
