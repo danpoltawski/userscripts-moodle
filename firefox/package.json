@@ -3,7 +3,7 @@
     "license": "GPL",
     "author": "Frédéric Massart <fred@moodle.com> (http://fmcorz.net)",
     "homepage": "https://github.com/danpoltawski/userscripts-moodle",
-    "version": "0.2.1",
+    "version": "0.3",
     "fullName": "MDK Browser Extension",
     "id": "jid1-yzSozbwZo3wKIg",
     "description": "A collection of userscripts to make Moodle developers' life easier.",
@@ -96,10 +96,24 @@
         },
         {
             "name": "mdk_toolbar_student_count",
-            "title": "",
+            "title": "Toolbar student count",
             "description": "The number of students to randomly pick from",
             "type": "integer",
             "value": 10
+        },
+        {
+            "name": "mdk_toolbar_langs-listComma",
+            "title": "Toolbar languages",
+            "description": "Comma separated list of available languages",
+            "type": "string",
+            "value": "en,fr,he,ja"
+        },
+        {
+            "name": "mdk_toolbar_themes-listComma",
+            "title": "Toolbar themes",
+            "description": "Comma separated list of available themes",
+            "type": "string",
+            "value": "afterburner,anomaly,arialist,binarius,boxxie,brick,canvas,clean,formal_white,formfactor,fusion,leatherbound,magazine,mymobile,nimble,nonzero,overlay,serenity,sky_high,splash,standard"
         },
         {
             "name": "mdk_tracker_pull_branches_enabled",
