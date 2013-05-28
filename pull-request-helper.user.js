@@ -29,6 +29,7 @@
     };
 
     var MASTER = document.getElementById('customfield_10111-val');
+    var MOODLE_25_STABLE = document.getElementById('customfield_11410-val');
     var MOODLE_24_STABLE = document.getElementById('customfield_11110-val');
     var MOODLE_23_STABLE = document.getElementById('customfield_11016-val');
     var MOODLE_22_STABLE = document.getElementById('customfield_10711-val');
@@ -51,6 +52,11 @@
     if (MASTER) {
         cs += "git checkout master\n";
         cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MASTER) + "\n\n";
+    }
+
+    if (MOODLE_25_STABLE) {
+        cs += "git checkout MOODLE_25_STABLE\n";
+        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_25_STABLE) + "\n\n";
     }
 
     if (MOODLE_24_STABLE) {
