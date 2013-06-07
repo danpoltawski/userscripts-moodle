@@ -7,7 +7,7 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
-// @version       0.7
+// @version       0.8
 // ==/UserScript==
 
 (function() {
@@ -15,6 +15,14 @@
     if (!GITREPO) {
         return;
     }
+
+    // Escape HTML function.
+    var escapeHTML = function(str) {
+        return str.replace(/[&"<>]/g, function (m) {
+            return escapeHTML.replacements[m];
+        });
+    };
+    escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
 
     // Function to retrieve the innerText of a DOM element.
     // Improves compatibility with Firefox which does not always define innerText.
@@ -25,7 +33,7 @@
         } else if (el.textContent) {
             text = el.textContent;
         }
-        return text.trim();
+        return escapeHTML(text.trim());
     };
 
     var MASTER = document.getElementById('customfield_10111-val');
