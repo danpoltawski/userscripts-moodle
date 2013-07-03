@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.430
+// @version         0.500
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -77,12 +77,33 @@ var mdkToolbar = {
     id: 'mdkToolbar',
     loadingid: 'mdkLoadingPic',
     loginid: 'mdkLoginiFrame',
+    mcfgid: 'mdkToolbarMcfg',
+    mcfgscriptid: 'mdkToolbarMcfgScript',
     M: null,
     purgeid: 'mdkPurgeCacheiFrame',
 
-    init: function(window) {
-        // Try to get the M variable.
-        this.M = window.M || undefined;
+    init: function() {
+        var code =
+            "if (typeof M !== 'undefined' && typeof M.cfg !== 'undefined') {" +
+            "mdkToolbarDiv = document.createElement('div');" +
+            "mdkToolbarDiv.style.display = 'none';" +
+            "mdkToolbarDiv.id = '" + this.mcfgid + "';" +
+            "mdkToolbarDiv.textContent = JSON.stringify(M.cfg || '{}');" +
+            "document.getElementsByTagName('body')[0].appendChild(mdkToolbarDiv)" +
+            "}";
+        var scr = document.createElement('script');
+        scr.id = this.mcfgscriptid;
+        scr.type = 'text/javascript';
+        scr.textContent = code;
+        document.getElementsByTagName('body')[0].appendChild(scr);
+    },
+
+    get_Mcfg: function() {
+        if (document.getElementById(this.mcfgid)) {
+            this.M = JSON.parse(document.getElementById(this.mcfgid).textContent);
+            document.getElementsByTagName('body')[0].removeChild(document.getElementById(this.mcfgid));
+            document.getElementsByTagName('body')[0].removeChild(document.getElementById(this.mcfgscriptid));
+        }
     },
 
     display: function() {
@@ -91,8 +112,8 @@ var mdkToolbar = {
             return;
         }
 
-        // Make sure M was found, which more or less guarantee that we are
-        // on a Moodle site.
+        // Make sure M was found, which more or less guarantee that we are on a Moodle site.
+        this.get_Mcfg();
         if (!this.M) {
             return;
         }
@@ -151,7 +172,7 @@ var mdkToolbar = {
         p.style.cssFloat = 'right';
         p.id = this.loadingid;
         loading_pic = D.createElement('img');
-        loading_pic.src = this.M.cfg.loadingicon;
+        loading_pic.src = this.M.loadingicon;
         loading_pic.style.verticalAlign = 'text-bottom';
         p.appendChild(loading_pic);
         e.appendChild(p);
@@ -207,12 +228,12 @@ var mdkToolbar = {
         // Courses.
         e.appendChild(D.createTextNode('Course: '));
         p = D.createElement('a');
-        p.href = this.M.cfg.wwwroot + '/course/index.php';
+        p.href = this.M.wwwroot + '/course/index.php';
         p.textContent = 'list';
         e.appendChild(p);
         e.appendChild(D.createTextNode(' - '));
         p = D.createElement('a');
-        p.href = this.M.cfg.wwwroot + '/course/edit.php?category=1';
+        p.href = this.M.wwwroot + '/course/edit.php?category=1';
         p.textContent = 'add';
         e.appendChild(p);
 
@@ -273,7 +294,7 @@ var mdkToolbar = {
             option = D.createElement('option');
             option.value = themes[i];
             option.text = themes[i];
-            option.selected = (this.M.cfg.theme == option.value) ? 'selected' : '';
+            option.selected = (this.M.theme == option.value) ? 'selected' : '';
             select.appendChild(option);
         }
         select.onchange = function() {
@@ -357,7 +378,7 @@ var mdkToolbar = {
             }
             var el = document.createElement('iframe');
             el.id = scope.loginid;
-            el.src = scope.M.cfg.wwwroot + '/login/index.php';
+            el.src = scope.M.wwwroot + '/login/index.php';
             el.onload = function() {
                 var frame = document.getElementById(scope.loginid);
                 if (!frame) {
@@ -395,7 +416,7 @@ var mdkToolbar = {
         if (logininfo.length >= 2) {
             var el = document.createElement('iframe');
             el.id = scope.loginid;
-            el.src = scope.M.cfg.wwwroot + '/login/logout.php?sesskey=' + scope.M.cfg.sesskey;
+            el.src = scope.M.wwwroot + '/login/logout.php?sesskey=' + scope.M.sesskey;
             el.onload = function() { login_iframe(mode); };
             el.style.cssText = 'display: none;';
             document.body.appendChild(el);
@@ -412,7 +433,7 @@ var mdkToolbar = {
         scope.loading(true);
         var el = document.createElement('iframe');
         el.id = scope.purgeid;
-        el.src = scope.M.cfg.wwwroot + '/admin/purgecaches.php?confirm=1&sesskey=' + scope.M.cfg.sesskey;
+        el.src = scope.M.wwwroot + '/admin/purgecaches.php?confirm=1&sesskey=' + scope.M.sesskey;
         el.style.cssText = 'display: none;';
         el.onload = function() {
             var i, id;
@@ -438,18 +459,7 @@ var mdkToolbar = {
 
 };
 
-// Getting the window.
-if (!!window.opera) {
-    unsafeWindow = window;
-} else if (!!window.navigator.vendor.match(/Google/)) {
-    var div = document.createElement('div');
-    div.setAttribute('onclick', 'return window;');
-    unsafeWindow = div.onclick();
-}
-
-// TODO Do not init and destroy mdkToolbar when not on Moodle site.
-mdkToolbar.init(unsafeWindow);
-
+mdkToolbar.init();
 if (typeof self !== 'undefined' && typeof self.port !== 'undefined' && typeof self.port.on !== 'undefined') {
     // Firefox extension specific.
     self.port.on("loadConfig", function(options) {
@@ -466,4 +476,3 @@ if (typeof self !== 'undefined' && typeof self.port !== 'undefined' && typeof se
     // Greasemonkey fallback.
     mdkToolbar.display();
 }
-
