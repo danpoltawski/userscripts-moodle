@@ -19,6 +19,7 @@
   },
   "options_page": "options.html",
   "permissions": [
+    "clipboardWrite",
     "tabs",
     "http://*/*",
     "https://*/*"

@@ -82,9 +82,23 @@ var translateOption = function(name, value) {
 // Messaging system to load the config.
 chrome.extension.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if (request.action == 'getConfig') {
+        if (request.action === 'getConfig') {
             sendResponse(getOptions(request.module));
+        } else if (request.action === 'clipboard') {
+            var txt = document.createElement('textarea');
+            var body = document.getElementsByTagName('body');
+            if (body) {
+                body = body[0];
+                body.appendChild(txt);
+                txt.value = request.txt;
+                txt.select();
+                document.execCommand('copy');
+                body.removeChild(txt);
+                sendResponse(true);
+            }
+            sendResponse(false);
         }
+        return true;
     }
 );
 
