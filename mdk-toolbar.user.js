@@ -74,6 +74,10 @@ var mdkToolbar = {
         }
     },
 
+    // Whether we are in an extension or not.
+    // Chrome sets this to 'ch', Firefox to 'ff'.
+    extension: null,
+
     id: 'mdkToolbar',
     loadingid: 'mdkLoadingPic',
     loginid: 'mdkLoginiFrame',
@@ -344,7 +348,8 @@ var mdkToolbar = {
                 // Add an extra space on the other side of the /.
                 breadcrumb = breadcrumb.replace(new RegExp(/ \//g), ' / ');
             }
-            window.prompt('Copy the breadcrumb', breadcrumb);
+
+            mdkToolbar.toClipboard(breadcrumb);
         }
         return false;
     },
@@ -467,6 +472,16 @@ var mdkToolbar = {
         };
         document.body.appendChild(el);
         return false;
+    },
+
+    toClipboard: function(text) {
+        if (this.extension === 'ch') {
+            chrome.extension.sendMessage({ action: 'clipboard', txt: text}, function() {});
+        } else if (this.extension === 'ff') {
+            self.postMessage({ action: 'clipboard', txt: text}, function(t) { alert(t); });
+        } else {
+            window.prompt('Copy this to clipboard', text);
+        }
     }
 
 };
@@ -476,12 +491,14 @@ if (typeof self !== 'undefined' && typeof self.port !== 'undefined' && typeof se
     // Firefox extension specific.
     self.port.on("loadConfig", function(options) {
         mdkToolbar.settings.load(options);
+        mdkToolbar.extension = 'ff';
         mdkToolbar.display();
     });
 } else if (typeof chrome !== 'undefined' && typeof chrome.extension !== 'undefined' && typeof chrome.extension.sendMessage !== 'undefined') {
     // Chrome extension specific.
     chrome.extension.sendMessage({ action: 'getConfig', module: 'mdk_toolbar'}, function(response) {
         mdkToolbar.settings.load(response);
+        mdkToolbar.extension = 'ch';
         mdkToolbar.display();
     });
 } else {
