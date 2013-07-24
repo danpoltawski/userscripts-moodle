@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.510
+// @version         0.520
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -236,7 +236,11 @@ var mdkToolbar = {
         // Courses.
         e.appendChild(D.createTextNode('Course: '));
         p = D.createElement('a');
-        p.href = this.M.wwwroot + '/course/index.php';
+        if (this.yuiversion >= this.versions['25']) {
+            p.href = this.M.wwwroot + '/course/manage.php';
+        } else {
+            p.href = this.M.wwwroot + '/course/index.php';
+        }
         p.textContent = 'list';
         e.appendChild(p);
         e.appendChild(D.createTextNode(' - '));
