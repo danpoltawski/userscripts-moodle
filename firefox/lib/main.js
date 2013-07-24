@@ -116,7 +116,13 @@ tabs.on('ready', function (tab) {
      */
     if (sp.prefs.mdk_toolbar_enabled && url.match(hostPattern)) {
         worker = tab.attach({
-            contentScriptFile: data.url('mdk-toolbar.user.js')
+            contentScriptFile: data.url('mdk-toolbar.user.js'),
+            onMessage: function(data) {
+                if (data.action === 'clipboard') {
+                    var cp = require('sdk/clipboard');
+                    cp.set(data.txt);
+                }
+            }
         });
         options = getOptions('mdk_toolbar') || {};
         worker.port.emit("loadConfig", options);
