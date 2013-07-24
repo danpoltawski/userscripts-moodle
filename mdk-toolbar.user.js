@@ -15,7 +15,7 @@
 // @match           https://*.moodle.local/*
 // @grant           none
 // @author          Frédéric Massart - FMCorz.net
-// @version         0.500
+// @version         0.510
 // ==/UserScript==
 
 var mdkToolbar = {
@@ -81,6 +81,12 @@ var mdkToolbar = {
     mcfgscriptid: 'mdkToolbarMcfgScript',
     M: null,
     purgeid: 'mdkPurgeCacheiFrame',
+    yuiversion: null,
+
+    // Using YUI version to identify Moodle major release.
+    versions: {
+        "25": "3.9.1"
+    },
 
     init: function() {
         var code =
@@ -88,6 +94,7 @@ var mdkToolbar = {
             "mdkToolbarDiv = document.createElement('div');" +
             "mdkToolbarDiv.style.display = 'none';" +
             "mdkToolbarDiv.id = '" + this.mcfgid + "';" +
+            "mdkToolbarDiv.setAttribute('yuiversion', YUI.version || '');" +
             "mdkToolbarDiv.textContent = JSON.stringify(M.cfg || '{}');" +
             "document.getElementsByTagName('body')[0].appendChild(mdkToolbarDiv)" +
             "}";
@@ -101,6 +108,7 @@ var mdkToolbar = {
     get_Mcfg: function() {
         if (document.getElementById(this.mcfgid)) {
             this.M = JSON.parse(document.getElementById(this.mcfgid).textContent);
+            this.yuiversion = document.getElementById(this.mcfgid).getAttribute('yuiversion');
             document.getElementsByTagName('body')[0].removeChild(document.getElementById(this.mcfgid));
             document.getElementsByTagName('body')[0].removeChild(document.getElementById(this.mcfgscriptid));
         }
