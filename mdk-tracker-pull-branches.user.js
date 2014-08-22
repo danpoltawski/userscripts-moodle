@@ -11,7 +11,7 @@
 // @match       https://tracker.moodle.org/browse/MDL-*
 // @grant       none
 // @author      Frédéric Massart - FMCorz.net
-// @version     0.60
+// @version     0.70
 // ==/UserScript==
 
 var mdkTrackerPullBranches = {
@@ -42,6 +42,8 @@ var mdkTrackerPullBranches = {
             23: '-23',
             24: '-24',
             25: '-25',
+            26: '-26',
+            27: '-27',
             master: '-master'
         },
 
@@ -80,6 +82,8 @@ var mdkTrackerPullBranches = {
             23: 'customfield_11016',
             24: 'customfield_11110',
             25: 'customfield_11410',
+            26: 'customfield_11612',
+            27: 'customfield_11710',
             master: 'customfield_10111'
         },
         diff: {
@@ -90,6 +94,8 @@ var mdkTrackerPullBranches = {
             23: 'customfield_11017',
             24: 'customfield_11111',
             25: 'customfield_11411',
+            26: 'customfield_11613',
+            27: 'customfield_11711',
             master: 'customfield_10112'
         },
         issue: 'key-val',
@@ -121,10 +127,12 @@ var mdkTrackerPullBranches = {
                 "        <ul style='list-style: none; padding: 0; margin: 0;'>   " +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='19' id='mdk_version_19' class='mdk_version'> 1.9</label></li>" +
                 // "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='21' id='mdk_version_21' class='mdk_version'> 2.1</label></li>" +
-                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='22' id='mdk_version_22' class='mdk_version'> 2.2</label></li>" +
-                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='23' id='mdk_version_23' class='mdk_version'> 2.3</label></li>" +
-                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='24' id='mdk_version_24' class='mdk_version'> 2.4</label></li>" +
+                // "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='22' id='mdk_version_22' class='mdk_version'> 2.2</label></li>" +
+                // "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='23' id='mdk_version_23' class='mdk_version'> 2.3</label></li>" +
+                // "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='24' id='mdk_version_24' class='mdk_version'> 2.4</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='25' id='mdk_version_25' class='mdk_version'> 2.5</label></li>" +
+                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='26' id='mdk_version_26' class='mdk_version'> 2.6</label></li>" +
+                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='27' id='mdk_version_27' class='mdk_version'> 2.7</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='master' id='mdk_version_master' class='mdk_version'> master</label></li>" +
                 "        </ul>" +
                 "        <div style='clear:both;'></div>" +
