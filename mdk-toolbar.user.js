@@ -39,6 +39,7 @@ var mdkToolbar = {
             'afterburner',
             'anomaly',
             'arialist',
+            'base',
             'binarius',
             'boxxie',
             'brick',
