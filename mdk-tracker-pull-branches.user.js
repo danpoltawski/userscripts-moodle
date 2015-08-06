@@ -31,7 +31,7 @@ var mdkTrackerPullBranches = {
         compare_with_origin: true,
 
         // The default branches to select.
-        default_branches: [ '24', '25', 'master' ],
+        default_branches: [ '28', '29', 'master' ],
 
         // How do you name your versions in the branches?
         versions: {
@@ -44,6 +44,8 @@ var mdkTrackerPullBranches = {
             25: '-25',
             26: '-26',
             27: '-27',
+            28: '-28',
+            29: '-29',
             master: '-master'
         },
 
@@ -84,6 +86,8 @@ var mdkTrackerPullBranches = {
             25: 'customfield_11410',
             26: 'customfield_11612',
             27: 'customfield_11710',
+            28: 'customfield_12013',
+            29: 'customfield_12311',
             master: 'customfield_10111'
         },
         diff: {
@@ -96,6 +100,8 @@ var mdkTrackerPullBranches = {
             25: 'customfield_11411',
             26: 'customfield_11613',
             27: 'customfield_11711',
+            28: 'customfield_12014',
+            29: 'customfield_12311',
             master: 'customfield_10112'
         },
         issue: 'key-val',
@@ -133,6 +139,8 @@ var mdkTrackerPullBranches = {
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='25' id='mdk_version_25' class='mdk_version'> 2.5</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='26' id='mdk_version_26' class='mdk_version'> 2.6</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='27' id='mdk_version_27' class='mdk_version'> 2.7</label></li>" +
+                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='28' id='mdk_version_28' class='mdk_version'> 2.8</label></li>" +
+                "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='29' id='mdk_version_29' class='mdk_version'> 2.9</label></li>" +
                 "            <li style='float: left; width: 50%;'><label><input type='checkbox' value='master' id='mdk_version_master' class='mdk_version'> master</label></li>" +
                 "        </ul>" +
                 "        <div style='clear:both;'></div>" +
