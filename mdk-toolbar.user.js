@@ -50,6 +50,7 @@ var mdkToolbar = {
             'fusion',
             'leatherbound',
             'magazine',
+            'more',
             'mymobile',
             'nimble',
             'nonzero',
