@@ -7,7 +7,7 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
-// @version       0.8
+// @version       0.12
 // ==/UserScript==
 
 (function() {
@@ -36,72 +36,80 @@
         return escapeHTML(text.trim());
     };
 
-    var MASTER = document.getElementById('customfield_10111-val');
-    var MOODLE_25_STABLE = document.getElementById('customfield_11410-val');
-    var MOODLE_24_STABLE = document.getElementById('customfield_11110-val');
-    var MOODLE_23_STABLE = document.getElementById('customfield_11016-val');
-    var MOODLE_22_STABLE = document.getElementById('customfield_10711-val');
-    var MOODLE_21_STABLE = document.getElementById('customfield_10311-val');
-    var MOODLE_20_STABLE = document.getElementById('customfield_10113-val');
-    var MOODLE_19_STABLE = document.getElementById('customfield_10116-val');
+    var
+        branches = [
+            {
+                shortname: 'master',
+                customField: '10111',
+                branchname: 'master'
+            },
+            {
+                shortname: '29',
+                customField: '12311',
+                branchname: 'MOODLE_29_STABLE'
+            },
+            {
+                shortname: '28',
+                customField: '12013',
+                branchname: 'MOODLE_28_STABLE'
+            },
+            {
+                shortname: '27',
+                customField: '11710',
+                branchname: 'MOODLE_27_STABLE'
+            }
+        ],
+        branchkey,
+        branch,
+        cs = '';
 
-    var template =
-            '<li id="userscript_integrator_cs" class="item">' +
-                '<div class="wrap">' +
-                    '<strong class="name" title="Integrators Cheat Sheet">Integrators Cheat Sheet:</strong>' +
-                    '<div id="userscript_integrator_cs-val" class="value type-textarea">' +
-                        '<pre style="overflow: auto;">%cheatsheet%</pre>' +
-                    '</div>' +
-                '</div>' +
-            '</li>';
+    branches.forEach(function(branch) {
+        branch.customFieldNode = document.getElementById('customfield_' + branch.customField + '-val');
+        if (branch.customFieldNode) {
+            cs +=
+                '<dl>' +
+                    '<dt>' + branch.shortname + '</dt>' +
+                    '<dd>' +
+                        '<pre>' +
+                            'git checkout ' + branch.branchname + "\n" +
+                            'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(branch.customFieldNode) + "\n" +
+                        '</pre>' +
+                    '</dd>' +
+                '</dl>'
+                ;
+        }
+    });
 
-    var cs = '';
-
-    if (MASTER) {
-        cs += "git checkout master\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MASTER) + "\n\n";
+    if (!cs) {
+        // No content on this issue.
+        return;
     }
 
-    if (MOODLE_25_STABLE) {
-        cs += "git checkout MOODLE_25_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_25_STABLE) + "\n\n";
-    }
+    var template = '' +
+        '<div id="userscript_integrator_cs" class="module toggle-wrap">' +
+            '<div id="userscript_integrator_cs_heading" class="mod-header">' +
+                '<ul class="ops"></ul>' +
+                '<h2 class="toggle-title">Pull Branches</h2>' +
+            '</div>' +
+            '<div class="mod-content">' +
+                '<ul class="item-details" id="userscript_integrator_cs-details">' +
+                    '<li class="userscript_integrator_cs-details">' +
+                        '%cheatsheet%' +
+                    '</li>' +
+                '</ul>' +
+            '</div>' +
+        '</div>'
+        ;
 
-    if (MOODLE_24_STABLE) {
-        cs += "git checkout MOODLE_24_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_24_STABLE) + "\n\n";
-    }
 
-    if (MOODLE_23_STABLE) {
-        cs += "git checkout MOODLE_23_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_23_STABLE) + "\n\n";
-    }
+    //var targetSection = document.getElementById('viewissuesidebar');
+    var targetSection = document.getElementById('details-module');
+    if (targetSection) {
+        targetSection = targetSection.parentNode;
+        var contentWrapper = document.createElement('span');
+        contentWrapper.innerHTML = template.replace('%cheatsheet%', cs.trim());
 
-    if (MOODLE_22_STABLE) {
-        cs += "git checkout MOODLE_22_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_22_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_21_STABLE) {
-        cs += "git checkout MOODLE_21_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_21_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_20_STABLE) {
-        cs += "git checkout MOODLE_20_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_20_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_19_STABLE) {
-        cs += "git checkout MOODLE_19_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_19_STABLE) + "\n\n";
-    }
-
-    var output = template.replace('%cheatsheet%', cs.trim());
-    var ul = document.getElementById('tabCellPane1');
-
-    if (ul) {
-        ul.innerHTML = output + ul.innerHTML;
+        targetSection.insertBefore(contentWrapper.firstChild, targetSection.firstChild);
     }
 
 })();
