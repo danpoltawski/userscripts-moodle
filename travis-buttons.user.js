@@ -1,6 +1,6 @@
 // ==UserScript==
-// @include       http://tracker.moodle.org/browse/*
-// @include       https://tracker.moodle.org/browse/*
+// @include       http://tracker.moodle.org/*
+// @include       https://tracker.moodle.org/*
 // @match         http://tracker.moodle.org/browse/*
 // @match         https://tracker.moodle.org/browse/*
 // @name          Travis to tracker
@@ -9,7 +9,7 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/travis-buttons.user.js
-// @version       0.2
+// @version       0.3
 // ==/UserScript==
 
 (function() {
