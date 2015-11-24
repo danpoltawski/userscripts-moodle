@@ -9,10 +9,10 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/travis-buttons.user.js
-// @version       0.3
+// @version       0.4
 // ==/UserScript==
 
-(function() {
+var add_travis = function() {
     var GITREPO = document.getElementById('customfield_10100-val');
     if (!GITREPO) {
         return;
@@ -72,4 +72,17 @@
     add_travis_button(username, MASTER);
     add_travis_button(username, MOODLE_30_STABLE);
 
-})();
+};
+
+
+// Attempt to add buttons on document load..
+add_travis();
+
+// But we also want to register it for when ajax stuff happens too..
+AJS.$(function() {
+    if (JIRA.Events.ISSUE_REFRESHED) {
+        JIRA.bind(JIRA.Events.ISSUE_REFRESHED, function () {
+            add_travis();
+        });
+    }
+});
