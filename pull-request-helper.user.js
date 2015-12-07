@@ -7,101 +7,151 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
-// @version       0.8
+// @version       1.00
 // ==/UserScript==
 
-(function() {
-    var GITREPO = document.getElementById('customfield_10100-val');
-    if (!GITREPO) {
-        return;
-    }
-
-    // Escape HTML function.
-    var escapeHTML = function(str) {
-        return str.replace(/[&"<>]/g, function (m) {
-            return escapeHTML.replacements[m];
-        });
-    };
-    escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
-
-    // Function to retrieve the innerText of a DOM element.
-    // Improves compatibility with Firefox which does not always define innerText.
-    var getInnerText = function(el) {
-        var text = '';
-        if (el.innerText) {
-            text = el.innerText;
-        } else if (el.textContent) {
-            text = el.textContent;
+var userScript = function() {
+    var updateView = function() {
+        var GITREPO = document.getElementById('customfield_10100-val');
+        if (!GITREPO) {
+            return;
         }
-        return escapeHTML(text.trim());
+
+        // Escape HTML function.
+        var escapeHTML = function(str) {
+            return str.replace(/[&"<>]/g, function (m) {
+                return escapeHTML.replacements[m];
+            });
+        };
+        escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
+
+        // Function to retrieve the innerText of a DOM element.
+        // Improves compatibility with Firefox which does not always define innerText.
+        var getInnerText = function(el) {
+            var text = '';
+            if (el.innerText) {
+                text = el.innerText;
+            } else if (el.textContent) {
+                text = el.textContent;
+            }
+            return escapeHTML(text.trim());
+        };
+
+        var
+            branches = [
+                {
+                    shortname: 'master',
+                    customField: '10111',
+                    branchname: 'master'
+                },
+                {
+                    shortname: '30',
+                    customField: '12911',
+                    branchname: 'MOODLE_30_STABLE'
+                },
+                {
+                    shortname: '29',
+                    customField: '12311',
+                    branchname: 'MOODLE_29_STABLE'
+                },
+                {
+                    shortname: '28',
+                    customField: '12013',
+                    branchname: 'MOODLE_28_STABLE'
+                },
+                {
+                    shortname: '27',
+                    customField: '11710',
+                    branchname: 'MOODLE_27_STABLE'
+                }
+            ],
+            branchkey,
+            branch,
+            cs = '',
+            gitrepo = getInnerText(GITREPO),
+            travisLink;
+
+        var structure = gitrepo.match('^.*:\/\/github.com\/([^/]*)\/moodle.*$');
+        if (structure) {
+            travisLink = 'https://travis-ci.org/' + structure[1] + '/moodle.svg?branch=';
+        }
+
+        branches.forEach(function(branch) {
+            branch.customFieldNode = document.getElementById('customfield_' + branch.customField + '-val');
+            if (branch.customFieldNode) {
+                var remoteBranchName = getInnerText(branch.customFieldNode),
+                    travisBranchStatus;
+                if (travisLink) {
+                    travisBranchStatus = '<img src="' + travisLink + remoteBranchName + '">';
+                }
+                cs +=
+                    '<dl>' +
+                        '<dt>' +
+                            branch.shortname +
+                            '<br>' +
+                            travisBranchStatus +
+                        '</dt>' +
+                        '<dd>' +
+                            '<pre>' +
+                                'git checkout ' + branch.branchname + "\n" +
+                                'git pull ' + gitrepo+ ' ' + getInnerText(branch.customFieldNode) + "\n" +
+                            '</pre>' +
+                        '</dd>' +
+                    '</dl>'
+                    ;
+            }
+        });
+
+        if (!cs) {
+            // No content on this issue.
+            return;
+        }
+
+        var template = '' +
+            '<div id="userscript_integrator_cs" class="module toggle-wrap">' +
+                '<div id="userscript_integrator_cs_heading" class="mod-header">' +
+                    '<ul class="ops"></ul>' +
+                    '<h2 class="toggle-title">Pull Branches</h2>' +
+                '</div>' +
+                '<div class="mod-content">' +
+                    '<ul class="item-details" id="userscript_integrator_cs-details">' +
+                        '<li class="userscript_integrator_cs-details">' +
+                            '%cheatsheet%' +
+                        '</li>' +
+                    '</ul>' +
+                '</div>' +
+            '</div>'
+            ;
+
+
+        var contentWrapper = document.createElement('span');
+        contentWrapper.innerHTML = template.replace('%cheatsheet%', cs.trim());
+
+        var targetSection = document.getElementById('userscript_integrator_cs');
+        if (targetSection) {
+            targetSection.parentNode.replaceChild(contentWrapper.firstChild, targetSection);
+        } else {
+            targetSection = document.getElementById('details-module');
+            if (targetSection) {
+                targetSection = targetSection.parentNode;
+                targetSection.insertBefore(contentWrapper.firstChild, targetSection.firstChild);
+            }
+        }
     };
 
-    var MASTER = document.getElementById('customfield_10111-val');
-    var MOODLE_25_STABLE = document.getElementById('customfield_11410-val');
-    var MOODLE_24_STABLE = document.getElementById('customfield_11110-val');
-    var MOODLE_23_STABLE = document.getElementById('customfield_11016-val');
-    var MOODLE_22_STABLE = document.getElementById('customfield_10711-val');
-    var MOODLE_21_STABLE = document.getElementById('customfield_10311-val');
-    var MOODLE_20_STABLE = document.getElementById('customfield_10113-val');
-    var MOODLE_19_STABLE = document.getElementById('customfield_10116-val');
+    updateView();
 
-    var template =
-            '<li id="userscript_integrator_cs" class="item">' +
-                '<div class="wrap">' +
-                    '<strong class="name" title="Integrators Cheat Sheet">Integrators Cheat Sheet:</strong>' +
-                    '<div id="userscript_integrator_cs-val" class="value type-textarea">' +
-                        '<pre style="overflow: auto;">%cheatsheet%</pre>' +
-                    '</div>' +
-                '</div>' +
-            '</li>';
+    // But we also want to register it for when ajax stuff happens too..
+    AJS.$(function() {
+        if (JIRA.Events.ISSUE_REFRESHED) {
+            JIRA.bind(JIRA.Events.ISSUE_REFRESHED, function () {
+                updateView();
+            });
+        }
+    });
+};
 
-    var cs = '';
-
-    if (MASTER) {
-        cs += "git checkout master\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MASTER) + "\n\n";
-    }
-
-    if (MOODLE_25_STABLE) {
-        cs += "git checkout MOODLE_25_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_25_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_24_STABLE) {
-        cs += "git checkout MOODLE_24_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_24_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_23_STABLE) {
-        cs += "git checkout MOODLE_23_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_23_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_22_STABLE) {
-        cs += "git checkout MOODLE_22_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_22_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_21_STABLE) {
-        cs += "git checkout MOODLE_21_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_21_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_20_STABLE) {
-        cs += "git checkout MOODLE_20_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_20_STABLE) + "\n\n";
-    }
-
-    if (MOODLE_19_STABLE) {
-        cs += "git checkout MOODLE_19_STABLE\n";
-        cs += 'git pull ' + getInnerText(GITREPO) + ' ' + getInnerText(MOODLE_19_STABLE) + "\n\n";
-    }
-
-    var output = template.replace('%cheatsheet%', cs.trim());
-    var ul = document.getElementById('tabCellPane1');
-
-    if (ul) {
-        ul.innerHTML = output + ul.innerHTML;
-    }
-
-})();
+// Hack to make this script work for Chrome.
+var winScript = document.createElement('script');
+winScript.appendChild(document.createTextNode('(' + userScript + ')();'));
+(document.body || document.head || document.documentElement).appendChild(winScript);
