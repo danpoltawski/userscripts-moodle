@@ -55,11 +55,29 @@ var add_travis = function() {
         img.setAttribute('src', 'https://travis-ci.org/'+username+'/moodle.svg?branch='+branchname);
         img.setAttribute('style', 'height: 15px; padding-left: 10px;');
 
+
         // Crappy link for the moment..
         var link = document.createElement('a');
         link.setAttribute('href', 'https://travis-ci.org/'+username+'/moodle/branches');
+        link.setAttribute('id', '#travis-link-'+branchname);
         link.appendChild(img);
         el.parentNode.insertBefore(link, el.nextSibling);
+
+        AJS.$.ajax({
+            dataType: "json",
+            url: 'https://api.travis-ci.org/repos/'+username+'/moodle/branches/'+branchname,
+            headers: {
+                Accept: 'application/vnd.travis-ci.2+json'
+            },
+            success: function(data) {
+                if (typeof data.branch === 'undefined' || typeof data.branch.id === 'undefined') {
+                    return;
+                }
+                AJS.$('#travis-link-'+branchname).attr("href",
+                    'https://travis-ci.org/'+username+'/moodle/builds/'+data.branch.id
+                    );
+            }
+        });
     };
 
     var matches = getInnerText(GITREPO).match('github.com\/([^\/]+)\/moodle');
