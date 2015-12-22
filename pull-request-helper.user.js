@@ -7,7 +7,7 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/pull-request-helper.user.js
-// @version       1.01
+// @version       1.3.0
 // ==/UserScript==
 
 var userScript = function() {
@@ -48,28 +48,27 @@ var userScript = function() {
             }
 
             var cs = '',
-                travisLink = ''
+                travisLink = '',
+                travisTargetLink = ''
                 ;
 
             var repoStructure = gitrepo.match('^.*:\/\/github.com\/([^/]*)\/moodle.*$');
             if (repoStructure) {
                 travisLink = 'https://travis-ci.org/' + repoStructure[1] + '/moodle.svg?branch=';
+                travisTargetLink = 'https://travis-ci.org/' + repoStructure[1] + '/moodle/builds/';
             }
 
             userScriptContent.branches.forEach(function(branch) {
                 branch.customFieldNode = AJS.$('#customfield_' + branch.customField + '-val');
                 if (branch.customFieldNode.length) {
-                    var remoteBranchName = branch.customFieldNode.text().trim(),
-                        travisBranchStatus;
-                    if (travisLink) {
-                        travisBranchStatus = '<img src="' + travisLink + remoteBranchName + '">';
-                    }
+                    var remoteBranchName = branch.customFieldNode.text().trim()
+                        ;
                     cs +=
                         '<dl>' +
                             '<dt>' +
                                 branch.shortname +
                                 '<br>' +
-                                travisBranchStatus +
+                                '<a id="travis_' + remoteBranchName + '"></a>' +
                             '</dt>' +
                             '<dd>' +
                                 '<pre>' +
@@ -115,6 +114,32 @@ var userScript = function() {
                     targetSection.before(content);
                 }
             }
+
+            // Note: This must go after DOM insertion because the items must exist in the DOM before we attempt to update them.
+            userScriptContent.branches.forEach(function(branch) {
+                if (branch.customFieldNode.length) {
+                    var remoteBranchName = branch.customFieldNode.text().trim();
+                    if (travisLink) {
+                        AJS.$.ajax({
+                            dataType: "json",
+                            url: 'https://api.travis-ci.org/repos/' + repoStructure[1] + '/moodle/branches/' + remoteBranchName,
+                            headers: {
+                                Accept: 'application/vnd.travis-ci.2+json'
+                            },
+                            success: function(data) {
+                                if (typeof data.branch === 'undefined' || typeof data.branch.id === 'undefined') {
+                                    return;
+                                }
+                                AJS.$('#travis_' + remoteBranchName)
+                                    .attr('href', travisTargetLink + data.branch.id)
+                                    .attr('target', '_blank')
+                                    .html('<img src="' + travisLink + remoteBranchName + '">')
+                                    ;
+                            }
+                        });
+                    }
+                }
+            });
         },
         setup: function() {
             userScriptContent.updateView();
