@@ -84,11 +84,11 @@ var add_travis = function() {
     var username = matches[1];
 
     var MASTER = document.getElementById('customfield_10111-val');
-    var MOODLE_30_STABLE = document.getElementById('customfield_12911-val');
-
-
     add_travis_button(username, MASTER);
+    var MOODLE_30_STABLE = document.getElementById('customfield_12911-val');
     add_travis_button(username, MOODLE_30_STABLE);
+    var MOODLE_29_STABLE = document.getElementById('customfield_12311-val');
+    add_travis_button(username, MOODLE_29_STABLE);
 
 };
 
