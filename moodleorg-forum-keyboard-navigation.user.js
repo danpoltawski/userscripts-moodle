@@ -7,24 +7,25 @@
 // @version       0.2
 // ==/UserScript==
 
-var nexturl = document.evaluate("//li[@class='next-discussion']/a[1]", document, null, XPathResult.ANY_TYPE, null).iterateNext().getAttribute('href');
+var nexturl = document.evaluate("//li[@class='next-discussion']/a[1]/@href", document, null, XPathResult.STRING_TYPE, null);
 
 if (nexturl) {
     window.addEventListener('keydown', function (e) {
         if (e.keyCode == 37) {
             // Left arrow (yep I know its oppposite to UI, but fits Dan's brain better)
-            window.location.href = nexturl;
+            window.location.href = nexturl.stringValue  + '#unread';
         }
     });
 }
 
-var prevurl = document.evaluate("//li[@class='prev-discussion']/a[1]", document, null, XPathResult.ANY_TYPE, null).iterateNext().getAttribute('href');
+var prevurl = document.evaluate("//li[@class='prev-discussion']/a[1]/@href", document, null, XPathResult.STRING_TYPE, null);
 
 if (prevurl) {
     window.addEventListener('keydown', function (e) {
         if (e.keyCode == 39) {
             // Right arrow (yep I know its oppposite to UI, but fits Dan's brain better)
-            window.location.href = prevurl;
+            window.location.href = prevurl. stringValue + '#unread';
         }
     });
 }
+
