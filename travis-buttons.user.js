@@ -51,6 +51,13 @@ var add_travis = function() {
             return;
         }
 
+        var linkid = 'travis-link-'+branchname;
+
+        if (AJS.$("#" + linkid).length > 0) {
+            // Don't add duplicate links.
+            return;
+        }
+
         var img = document.createElement('img');
         img.setAttribute('src', 'https://travis-ci.org/'+username+'/moodle.svg?branch='+branchname);
         img.setAttribute('style', 'height: 15px; padding-left: 10px;');
@@ -59,7 +66,7 @@ var add_travis = function() {
         // Crappy link for the moment..
         var link = document.createElement('a');
         link.setAttribute('href', 'https://travis-ci.org/'+username+'/moodle/branches');
-        link.setAttribute('id', '#travis-link-'+branchname);
+        link.setAttribute('id', linkid);
         link.appendChild(img);
         el.parentNode.insertBefore(link, el.nextSibling);
 
@@ -73,7 +80,7 @@ var add_travis = function() {
                 if (typeof data.branch === 'undefined' || typeof data.branch.id === 'undefined') {
                     return;
                 }
-                AJS.$('#travis-link-'+branchname).attr("href",
+                AJS.$('#'+linkid).attr("href",
                     'https://travis-ci.org/'+username+'/moodle/builds/'+data.branch.id
                     );
             }
