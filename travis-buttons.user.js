@@ -12,65 +12,41 @@
 // @version       0.4
 // ==/UserScript==
 
-var add_travis = function() {
-    var GITREPO = document.getElementById('customfield_10100-val');
+var add_travis = function($) {
+    var GITREPO = $('#customfield_10100-val').text();
     if (!GITREPO) {
         return;
     }
-
-
-
-    // Escape HTML function.
-    var escapeHTML = function(str) {
-        return str.replace(/[&"<>]/g, function (m) {
-            return escapeHTML.replacements[m];
-        });
-    };
-    escapeHTML.replacements = { "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" };
-
-    // Function to retrieve the innerText of a DOM element.
-    // Improves compatibility with Firefox which does not always define innerText.
-    var getInnerText = function(el) {
-        var text = '';
-        if (el.innerText) {
-            text = el.innerText;
-        } else if (el.textContent) {
-            text = el.textContent;
-        }
-        return escapeHTML(text.trim());
-    };
-
 
     var add_travis_button = function (username, el) {
         if (!el) {
             return;
         }
-        var branchname = getInnerText(el);
+        var branchname = el.text().trim();
 
         if (!branchname) {
             return;
         }
 
-        var linkid = 'travis-link-'+branchname;
+        var linkid = 'travis-link-' + branchname;
 
-        if (AJS.$("#" + linkid).length > 0) {
+        if ($("#" + linkid).length > 0) {
             // Don't add duplicate links.
             return;
         }
 
-        var img = document.createElement('img');
-        img.setAttribute('src', 'https://travis-ci.org/'+username+'/moodle.svg?branch='+branchname);
-        img.setAttribute('style', 'height: 15px; padding-left: 10px;');
+
+        var img = $('<img>', {
+            src: 'https://travis-ci.org/'+username+'/moodle.svg?branch='+branchname,
+            style: 'height: 15px; padding-left: 10px;'
+        });
 
 
         // Crappy link for the moment..
-        var link = document.createElement('a');
-        link.setAttribute('href', 'https://travis-ci.org/'+username+'/moodle/branches');
-        link.setAttribute('id', linkid);
-        link.appendChild(img);
-        el.parentNode.insertBefore(link, el.nextSibling);
+        var link = $('<a>', {id: linkid, href: 'https://travis-ci.org/'+username+'/moodle/branches'});
+        link.append(img).insertAfter(el);
 
-        AJS.$.ajax({
+        $.ajax({
             dataType: "json",
             url: 'https://api.travis-ci.org/repos/'+username+'/moodle/branches/'+branchname,
             headers: {
@@ -87,27 +63,26 @@ var add_travis = function() {
         });
     };
 
-    var matches = getInnerText(GITREPO).match('github.com\/([^\/]+)\/moodle');
+    var matches = GITREPO.match('github.com\/([^\/]+)\/moodle');
     var username = matches[1];
 
-    var MASTER = document.getElementById('customfield_10111-val');
+    var MASTER = $('#customfield_10111-val');
     add_travis_button(username, MASTER);
-    var MOODLE_30_STABLE = document.getElementById('customfield_12911-val');
+    var MOODLE_30_STABLE = $('#customfield_12911-val');
     add_travis_button(username, MOODLE_30_STABLE);
-    var MOODLE_29_STABLE = document.getElementById('customfield_12311-val');
+    var MOODLE_29_STABLE = $('#customfield_12311-val');
     add_travis_button(username, MOODLE_29_STABLE);
-
 };
 
 
 // Attempt to add buttons on document load..
-add_travis();
+add_travis(AJS.$);
 
 // But we also want to register it for when ajax stuff happens too..
 AJS.$(function() {
     if (JIRA.Events.ISSUE_REFRESHED) {
         JIRA.bind(JIRA.Events.ISSUE_REFRESHED, function () {
-            add_travis();
+            add_travis(AJS.$);
         });
     }
 });
