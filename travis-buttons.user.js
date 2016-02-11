@@ -13,15 +13,22 @@
 // ==/UserScript==
 
 var add_travis = function($) {
-    var GITREPO = $('#customfield_10100-val').text();
-    if (!GITREPO) {
+    // Look for github repo in repository field.
+    var matches = $('#customfield_10100-val').text().match('github.com\/([^\/]+)\/moodle');
+
+    if (matches.length != 2) {
+        // No github repo found
         return;
     }
+    var username = matches[1];
+
+    // Fairly hacky way of determining the list of branch fields, but means we don't have
+    // to keep updating it..
+    var branches = $('#customfieldmodule') // In the list of cutom fields
+        .find("li[id^='rowForcustomfield_']:contains('Pull'):contains('Branch:')") // li id starting with 'rowForcustomfield_' and containing 'Pull' and 'Branch:'
+        .find("div[id^=customfield_][id$=-val]"); // And the containing div which matches id 'customfield_[*]-val'
 
     var add_travis_button = function (username, el) {
-        if (!el) {
-            return;
-        }
         var branchname = el.text().trim();
 
         if (!branchname) {
@@ -35,12 +42,10 @@ var add_travis = function($) {
             return;
         }
 
-
         var img = $('<img>', {
             src: 'https://travis-ci.org/'+username+'/moodle.svg?branch='+branchname,
             style: 'height: 15px; padding-left: 10px;'
         });
-
 
         // Crappy link for the moment..
         var link = $('<a>', {id: linkid, href: 'https://travis-ci.org/'+username+'/moodle/branches'});
@@ -63,17 +68,10 @@ var add_travis = function($) {
         });
     };
 
-    var matches = GITREPO.match('github.com\/([^\/]+)\/moodle');
-    var username = matches[1];
-
-    var MASTER = $('#customfield_10111-val');
-    add_travis_button(username, MASTER);
-    var MOODLE_30_STABLE = $('#customfield_12911-val');
-    add_travis_button(username, MOODLE_30_STABLE);
-    var MOODLE_29_STABLE = $('#customfield_12311-val');
-    add_travis_button(username, MOODLE_29_STABLE);
+    branches.each(function (index, element) {
+        add_travis_button(username, $(element));
+    });
 };
-
 
 // Attempt to add buttons on document load..
 add_travis(AJS.$);
