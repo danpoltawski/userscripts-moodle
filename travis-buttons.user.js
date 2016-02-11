@@ -9,7 +9,7 @@
 // @homepage      http://github.com/danpoltawski/userscripts-moodle
 // @namespace     http://userscripts.danpoltawski.co.uk
 // @downloadURL   https://github.com/danpoltawski/userscripts-moodle/raw/master/travis-buttons.user.js
-// @version       0.4
+// @version       0.5
 // ==/UserScript==
 
 var add_travis = function($) {
